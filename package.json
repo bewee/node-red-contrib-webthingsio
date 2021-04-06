@@ -10,6 +10,11 @@
     "type": "git",
     "url": "git+https://github.com/bewee/node-red-contrib-webthingsio.git"
   },
+  "keywords": [
+    "node-red",
+    "webthings",
+    "webthingsio"
+  ],
   "author": "bewee",
   "license": "MPL-2.0",
   "bugs": {
