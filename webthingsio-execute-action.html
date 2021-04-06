@@ -1,0 +1,114 @@
+<script type="text/javascript">
+    
+    window.RED.nodes.registerType('webthingsio-execute-action', {
+        category: 'Web Things IO',
+        color: '#5d9bc7',
+        defaults: {
+            /* eslint-disable no-undefined */
+            name: {value: ''},
+            gateway: {value: '', type: 'webthingsio-gateway'},
+            thing: {value: undefined, validate: (v) => v ? true : false},
+            action: {value: undefined, validate: (v) => v ? true : false},
+            useInjected: {value: true},
+            input: {value: undefined},
+        },
+        inputs: 1,
+        outputs: 0,
+        icon: 'webthingsio.svg',
+        label: function() {
+            function limitlen(s) {
+                if (s.length > 15) {
+                    s = `${s.substring(0, 15)}...`;
+                }
+                return s;
+            }
+
+            if (this.name) {
+                return this.name;
+            } else if (this.gateway && this.thing && this.action) {
+                if (!this.useInjected && !this.input) {
+                    // eslint-disable-next-line max-len
+                    return `Execute action ${this.action} of thing ${this.thing} (no input)`;
+                } else if (!this.useInjected) {
+                    // eslint-disable-next-line max-len
+                    return `Execute action ${this.action} of thing ${this.thing} (input: ${limitlen(this.input)})`;
+                } else {
+                    return `Execute action ${this.action} of thing ${this.thing}`;
+                }
+            } else {
+                return 'Execute WebThing action';
+            }
+        },
+        paletteLabel: 'WebThing execute action',
+        oneditprepare: async function() {
+            async function initializeInputs(node) {
+                await webthingsio.updateThing(false);
+                $('#node-input--thing').prop('value', node.thing);
+                await webthingsio.updateAction(false);
+                $('#node-input--action').prop('value', node.action);
+                await webthingsio.updateActionInput(false);
+                webthingsio.initializeInput(node.input);
+                $('#node-input--useInjected').prop('checked', node.useInjected);
+                await webthingsio.useInjectedChanged('action');
+            }
+
+            function addListeners() {
+                $('#node-input-gateway')[0].addEventListener(
+                    'change',
+                    () => webthingsio.updateThing(),
+                );
+                $('#node-input--thing')[0].addEventListener(
+                    'change',
+                    () => webthingsio.updateAction(),
+                );
+                $('#node-input--action')[0].addEventListener(
+                    'change',
+                    () => webthingsio.updateActionInput(),
+                );
+                $('#node-input--useInjected')[0].addEventListener(
+                    'change',
+                    () => webthingsio.useInjectedChanged('action'),
+                );
+            }
+
+            await initializeInputs(this);
+            addListeners();
+        },
+        oneditsave: function() {
+            webthingsio.saveThing(this);
+            webthingsio.saveAction(this);
+            webthingsio.saveUseInjected(this);
+            webthingsio.saveInput(this);
+        },
+    });
+</script>
+
+<script type="text/html" data-template-name="webthingsio-execute-action">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-gateway"><i class="fa fa-tag"></i> Gateway</label>
+        <input type="text" id="node-input-gateway">
+    </div>
+    <div class="form-row" id="thing-row" style="display: none;">
+        <label for="node-input--thing"><i class="fa fa-tag"></i> Thing</label>
+        <select id="node-input--thing" style="width: 70%;"></select>
+    </div>
+    <div class="form-row" id="action-row" style="display: none;">
+        <label for="node-input--action"><i class="fa fa-tag"></i> Action</label>
+        <select id="node-input--action" style="width: 70%;"></select>
+    </div>
+    <div class="form-row" id="useInjected-row style="display: none;"">
+        <label class="form-check-label" for="node-input--useInjected" style="width: auto;">Use injected input?</label>
+        <input type="checkbox" id="node-input--useInjected" style="width: 30px;">
+    </div>
+    <div class="form-row" id="input-row" style="display: none;">
+        <label for="node-input--input"><i class="fa fa-tag"></i> Input</label>
+    </div>
+</script>
+
+<script type="text/html" data-help-name="webthingsio-execute-action">
+    <p>This node executes an action of a Web Thing.</p>
+</script>

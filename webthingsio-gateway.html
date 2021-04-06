@@ -1,0 +1,53 @@
+<script type="text/javascript">
+    const script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.src = 'webthingsio/js/webthingsio-client-core.js';
+    document.head.appendChild(script);
+    
+    window.RED.nodes.registerType('webthingsio-gateway', {
+        category: 'config',
+        defaults: {
+            name: {value: '', required: false},
+            host: {value: 'localhost', required: true},
+            port: {
+                value: 8080,
+                required: true,
+                validate: window.RED.validators.number(),
+            },
+            https: {value: false, required: true},
+            accessToken: {value: '', required: true},
+            skipValidation: {value: false, required: true},
+        },
+        label: function() {
+            return this.name ||
+                `http${this.https ? 's' : ''}://${this.host}:${this.port}`;
+        },
+    });
+</script>
+
+<script type="text/html" data-template-name="webthingsio-gateway">
+    <div class="form-row">
+        <label for="node-config-input-name"><i class="fa fa-bookmark"></i> Name</label>
+        <input type="text" id="node-config-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-host"><i class="fa fa-bookmark"></i> Host</label>
+        <input type="text" id="node-config-input-host">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-port"><i class="fa fa-bookmark"></i> Port</label>
+        <input type="text" id="node-config-input-port">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-https"><i class="fa fa-bookmark"></i> HTTPS?</label>
+        <input type="checkbox" id="node-config-input-https">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-accessToken"><i class="fa fa-bookmark"></i> Access token (aka local authorization)</label>
+        <input type="text" id="node-config-input-accessToken">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-skipValidation"><i class="fa fa-bookmark"></i> Skip validation?</label>
+        <input type="checkbox" id="node-config-input-skipValidation">
+    </div>
+</script>

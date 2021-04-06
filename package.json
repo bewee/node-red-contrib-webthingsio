@@ -1,0 +1,42 @@
+{
+  "name": "node-red-contrib-webthingsio",
+  "version": "0.0.1",
+  "description": "Set/get properties, execute actions and inject on events of your WebThings",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bewee/node-red-contrib-webthingsio.git"
+  },
+  "author": "bewee",
+  "license": "MPL-2.0",
+  "bugs": {
+    "url": "https://github.com/bewee/node-red-contrib-webthingsio/issues"
+  },
+  "homepage": "https://github.com/bewee/node-red-contrib-webthingsio#readme",
+  "node-red": {
+    "nodes": {
+      "webthingsio-gateway": "webthingsio-gateway.js",
+      "webthingsio-set-property": "webthingsio-set-property.js",
+      "webthingsio-get-property": "webthingsio-get-property.js",
+      "webthingsio-execute-action": "webthingsio-execute-action.js",
+      "webthingsio-inject": "webthingsio-inject.js"
+    }
+  },
+  "dependencies": {
+    "webthings-client": "^4.1.0"
+  },
+  "devDependencies": {
+    "babel-eslint": "^10.1.0",
+    "eslint": "^6.8.0",
+    "eslint-config-standard": "^14.1.1",
+    "eslint-plugin-html": "^6.1.2",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-jquery": "^1.5.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1"
+  }
+}

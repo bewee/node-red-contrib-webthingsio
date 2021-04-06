@@ -1,0 +1,76 @@
+<script type="text/javascript">
+
+    RED.nodes.registerType('webthingsio-get-property', {
+        category: 'Web Things IO',
+        color: '#5d9bc7',
+        defaults: {
+            /* eslint-disable no-undefined */
+            name: {value: ''},
+            gateway: {value: '', type: 'webthingsio-gateway', required: true},
+            thing: {value: undefined, validate: (v) => v ? true : false},
+            property: {value: undefined, validate: (v) => v ? true : false},
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: 'webthingsio.svg',
+        label: function() {
+            if (this.name) {
+                return this.name;
+            } else if (this.gateway && this.thing && this.property) {
+                return `Get property ${this.property} of thing ${this.thing}`;
+            } else {
+                return 'Get WebThing property';
+            }
+        },
+        paletteLabel: 'WebThing get property',
+        oneditprepare: async function() {
+            async function initializeInputs(node) {
+                await webthingsio.updateThing(false);
+                $('#node-input--thing').prop('value', node.thing);
+                await webthingsio.updateProperty(false);
+                $('#node-input--property').prop('value', node.property);
+            }
+
+            function addListeners() {
+                $('#node-input-gateway')[0].addEventListener(
+                    'change',
+                    () => webthingsio.updateThing(),
+                );
+                $('#node-input--thing')[0].addEventListener(
+                    'change',
+                    () => webthingsio.updateProperty(),
+                );
+            }
+
+            await initializeInputs(this);
+            addListeners();
+        },
+        oneditsave: function() {
+            webthingsio.saveThing(this);
+            webthingsio.saveProperty(this);
+        },
+    });
+</script>
+
+<script type="text/html" data-template-name="webthingsio-get-property">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-gateway"><i class="fa fa-tag"></i> Gateway</label>
+        <input type="text" id="node-input-gateway">
+    </div>
+    <div class="form-row" id="thing-row" style="display: none;">
+        <label for="node-input--thing"><i class="fa fa-tag"></i> Thing</label>
+        <select id="node-input--thing" style="width: 70%;"></select>
+    </div>
+    <div class="form-row" id="property-row" style="display: none;">
+        <label for="node-input--property"><i class="fa fa-tag"></i> Property</label>
+        <select id="node-input--property" style="width: 70%;"></select>
+    </div>
+</script>
+
+<script type="text/html" data-help-name="webthingsio-get-property">
+    <p>This node gets the value of a property of a Web Thing.</p>
+</script>

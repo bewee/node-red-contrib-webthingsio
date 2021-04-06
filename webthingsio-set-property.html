@@ -1,0 +1,112 @@
+<script type="text/javascript">
+
+    RED.nodes.registerType('webthingsio-set-property', {
+        category: 'Web Things IO',
+        color: '#5d9bc7',
+        defaults: {
+            /* eslint-disable no-undefined */
+            name: {value: ''},
+            gateway: {value: '', type: 'webthingsio-gateway', required: true},
+            thing: {value: undefined, validate: (v) => v ? true : false},
+            property: {value: undefined, validate: (v) => v ? true : false},
+            useInjected: {value: true},
+            input: {value: undefined},
+        },
+        inputs: 1,
+        outputs: 0,
+        icon: 'webthingsio.svg',
+        label: function() {
+            function limitlen(s) {
+                if (s.length > 15) {
+                    s = `${s.substring(0, 15)}...`;
+                }
+                return s;
+            }
+
+            if (this.name) {
+                return this.name;
+            } else if (this.gateway && this.thing && this.property) {
+                if (this.useInjected) {
+                    // eslint-disable-next-line max-len
+                    return `Set property ${this.property} of thing ${this.thing}`;
+                } else {
+                    // eslint-disable-next-line max-len
+                    return `Set property ${this.property} of thing ${this.thing} to ${limitlen(this.input)}`;
+                }
+            } else {
+                return 'Set WebThing property';
+            }
+        },
+        paletteLabel: 'WebThing set property',
+        oneditprepare: async function() {
+            async function initializeInputs(node) {
+                await webthingsio.updateThing(false);
+                $('#node-input--thing').prop('value', node.thing);
+                await webthingsio.updateProperty(false);
+                $('#node-input--property').prop('value', node.property);
+                await webthingsio.updatePropertyInput(false);
+                webthingsio.initializeInput(node.input);
+                $('#node-input--useInjected').prop('checked', node.useInjected);
+                await webthingsio.useInjectedChanged('property');
+            }
+
+            function addListeners() {
+                $('#node-input-gateway')[0].addEventListener(
+                    'change',
+                    () => webthingsio.updateThing(),
+                );
+                $('#node-input--thing')[0].addEventListener(
+                    'change',
+                    () => webthingsio.updateProperty(),
+                );
+                $('#node-input--property')[0].addEventListener(
+                    'change',
+                    () => webthingsio.updatePropertyInput(),
+                );
+                $('#node-input--useInjected')[0].addEventListener(
+                    'change',
+                    () => webthingsio.useInjectedChanged('property'),
+                );
+            }
+
+            await initializeInputs(this);
+            addListeners();
+        },
+        oneditsave: function() {
+            webthingsio.saveThing(this);
+            webthingsio.saveProperty(this);
+            webthingsio.saveUseInjected(this);
+            webthingsio.saveInput(this);
+        },
+    });
+</script>
+
+<script type="text/html" data-template-name="webthingsio-set-property">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-gateway"><i class="fa fa-tag"></i> Gateway</label>
+        <input type="text" id="node-input-gateway">
+    </div>
+    <div class="form-row" id="thing-row" style="display: none;">
+        <label for="node-input--thing"><i class="fa fa-tag"></i> Thing</label>
+        <select id="node-input--thing" style="width: 70%;"></select>
+    </div>
+    <div class="form-row" id="property-row" style="display: none;">
+        <label for="node-input--property"><i class="fa fa-tag"></i> Property</label>
+        <select id="node-input--property" style="width: 70%;"></select>
+    </div>
+    <div class="form-row" id="useInjected-row" style="display: none;">
+        <label class="form-check-label" for="node-input--useInjected" style="width: auto;">Use injected value?</label>
+        <input type="checkbox" id="node-input--useInjected" style="width: 30px;">
+    </div>
+    <div class="form-row" id="input-row" style="display: none;">
+        <label for="node-input--input"><i class="fa fa-tag"></i> Value</label>
+    </div>
+</script>
+
+<script type="text/html" data-help-name="webthingsio-set-property">
+    <p>This node sets the value of a property of a Web Thing.</p>
+</script>
