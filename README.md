@@ -2,6 +2,8 @@
 
 Use the devices from your [WebthingsIO](https://webthings.io/) gateway in [Node-RED](https://nodered.org/) for home automation. 
 
+![image](https://user-images.githubusercontent.com/44091658/114248760-d5718f00-9998-11eb-8eb4-44c6e41848a5.png)
+
 ## Setup
 
 The simplest way to setup Node-RED for your webthings gateway is to install [this](https://github.com/bewee/node-red-extension) addon.
