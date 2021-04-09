@@ -40,6 +40,13 @@
         paletteLabel: 'WebThing set property',
         oneditprepare: async function() {
             async function initializeInputs(node) {
+                if (
+                    $('#node-input-gateway')[0].options.length > 1 &&
+                    !node.gateway
+                ) {
+                    $('#node-input-gateway')[0].selectedIndex = 0;
+                    $('#node-input-gateway').removeClass('input-error');
+                }
                 await webthingsio.updateThing(false);
                 $('#node-input--thing').prop('value', node.thing);
                 await webthingsio.updateProperty(false);

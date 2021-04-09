@@ -102,6 +102,13 @@
         paletteLabel: 'WebThing inject',
         oneditprepare: async function() {
             async function initializeInputs(node) {
+                if (
+                    $('#node-input-gateway')[0].options.length > 1 &&
+                    !node.gateway
+                ) {
+                    $('#node-input-gateway')[0].selectedIndex = 0;
+                    $('#node-input-gateway').removeClass('input-error');
+                }
                 $('#node-input--injectOn').prop('value', node.injectOn);
                 await webthingsio.updateThing(false, true);
                 $('#node-input--thing').prop('value', node.thing);
