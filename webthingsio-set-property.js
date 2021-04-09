@@ -38,6 +38,7 @@ module.exports = function(RED) {
                     config.property,
                     value,
                 );
+                this.send(msg);
             } catch (ex) {
                 this.error(`Failed to set property: ${ex}`);
             }

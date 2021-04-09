@@ -38,6 +38,7 @@ module.exports = function(RED) {
                     config.action,
                     value,
                 );
+                this.send(msg);
             } catch (ex) {
                 this.error(`Failed to execute action: ${ex}`);
             }
