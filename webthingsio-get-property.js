@@ -14,7 +14,7 @@ module.exports = function(RED) {
             this.error('WebthingsClient not found!');
             return;
         }
-        this.on('input', async (_msg) => {
+        this.on('input', async (_msg, send, done) => {
             if (typeof config.thing !== 'string') {
                 this.error('Thing name invalid!');
                 return;
@@ -30,11 +30,13 @@ module.exports = function(RED) {
                 );
             } catch (ex) {
                 this.error(`Failed to get property: ${ex}`);
+                done(`Failed to get property: ${ex}`);
                 return;
             }
-            this.send({
+            send({
                 payload: value,
             });
+            done();
         });
     }
     RED.nodes.registerType(

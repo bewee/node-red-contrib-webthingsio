@@ -14,7 +14,7 @@ module.exports = function(RED) {
             this.error('WebthingsClient not found!');
             return;
         }
-        this.on('input', async (msg) => {
+        this.on('input', async (msg, _send, done) => {
             if (typeof config.thing !== 'string') {
                 this.error('Thing name invalid!');
                 return;
@@ -38,9 +38,10 @@ module.exports = function(RED) {
                     config.property,
                     value,
                 );
-                this.send(msg);
+                done();
             } catch (ex) {
                 this.error(`Failed to set property: ${ex}`);
+                done(`Failed to set property: ${ex}`);
             }
         });
     }
