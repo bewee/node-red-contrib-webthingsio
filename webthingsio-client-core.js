@@ -1,18 +1,33 @@
 const webthingsio = {
     fetchGateway: async function(location, gatewayNode) {
-        const res = await fetch(
-            // eslint-disable-next-line max-len
-            `http${gatewayNode.https ? 's' : ''}://${gatewayNode.host}:${gatewayNode.port}/${location}`,
-            {
-                method: 'GET',
-                headers: {
-                    Authorization: `Bearer ${gatewayNode.accessToken}`,
-                    'Content-Type': 'application/json',
-                    Accept: 'application/json',
+        let host = gatewayNode.host;
+        if (
+            !host ||
+            host === '0.0.0.0' ||
+            host === '127.0.0.1' ||
+            host === 'localhost'
+        ) {
+            host = window.location.hostname;
+        }
+        try {
+            const res = await fetch(
+                // eslint-disable-next-line max-len
+                `http${gatewayNode.https ? 's' : ''}://${host}:${gatewayNode.port}/${location}`,
+                {
+                    method: 'GET',
+                    headers: {
+                        Authorization: `Bearer ${gatewayNode.accessToken}`,
+                        'Content-Type': 'application/json',
+                        Accept: 'application/json',
+                    },
                 },
-            },
-        );
-        return await res.json();
+            );
+            return await res.json();
+        } catch (ex) {
+            console.error('Failed to fetch gateway!', ex);
+            $('#node-error').text('Gateway connection failed!');
+            $('#node-error').show();
+        }
     },
 
     findGatewayNode: function(identifier) {
