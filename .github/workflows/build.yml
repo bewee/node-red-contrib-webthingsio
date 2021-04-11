@@ -28,4 +28,4 @@ jobs:
           npm install
       - name: Lint with eslint
         run: |
-          eslint . --ext html --ext js
+          npx run eslint . --ext html --ext js
