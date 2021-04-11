@@ -1,12 +1,9 @@
 name: Build
 
 on:
-  pull_request:
-    branches:
-      - master
   push:
     branches:
-      - master
+      - '*'
 
 jobs:
   build:
@@ -26,6 +23,9 @@ jobs:
       - name: Install dependencies
         run: |
           npm install
+      - name: Install eslint
+        run: |
+          npm install -g eslint
       - name: Lint with eslint
         run: |
           eslint . --ext html --ext js
