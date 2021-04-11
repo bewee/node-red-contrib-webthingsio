@@ -34,7 +34,7 @@
                 }
                 await webthingsio.updateThing(false);
                 $('#node-input--thing').prop('value', node.thing);
-                await webthingsio.updateProperty(false);
+                await webthingsio.updateProperty(false, false, true);
                 $('#node-input--property').prop('value', node.property);
             }
 
@@ -45,7 +45,7 @@
                 );
                 $('#node-input--thing')[0].addEventListener(
                     'change',
-                    () => webthingsio.updateProperty(),
+                    () => webthingsio.updateProperty(true, false, true),
                 );
             }
 
