@@ -20,7 +20,7 @@ module.exports = function(RED) {
         this.gateway.webthingsEmitter.on('disconnected', () => {
             this.status({fill: 'red', shape: 'ring', text: 'disconnected'});
         });
-        this.on('input', async (_msg, send, done) => {
+        this.on('input', async (msg, send, done) => {
             if (typeof config.thing !== 'string') {
                 this.error('Thing name invalid!');
                 return;
@@ -39,9 +39,8 @@ module.exports = function(RED) {
                 done(`Failed to get property: ${ex}`);
                 return;
             }
-            send({
-                payload: value,
-            });
+            msg.payload = value;
+            send(msg);
             done();
         });
     }
