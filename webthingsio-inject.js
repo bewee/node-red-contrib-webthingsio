@@ -14,6 +14,12 @@ module.exports = function(RED) {
             this.error('WebthingsClient not found!');
             return;
         }
+        this.gateway.webthingsEmitter.on('connected', () => {
+            this.status({fill: 'green', shape: 'dot', text: 'connected'});
+        });
+        this.gateway.webthingsEmitter.on('disconnected', () => {
+            this.status({fill: 'red', shape: 'ring', text: 'disconnected'});
+        });
         switch (config.injectOn) {
             case 'property changed':
                 this.gateway.webthingsEmitter.on(

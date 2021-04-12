@@ -12,17 +12,13 @@ class WebThingsEmitter extends EventEmitter {
         this.token = token;
         this.useHttps = useHttps;
         this.skipValidation = skipValidation;
-        const webthingsClient = new WebThingsClient(
-            address,
-            port,
-            token,
-            useHttps,
-            skipValidation,
-        );
-        this.connect(webthingsClient);
+        this.connect();
     }
 
-    reconnect() {
+    async connect() {
+        if (this.dead) {
+            return;
+        }
         const webthingsClient = new WebThingsClient(
             this.address,
             this.port,
@@ -30,17 +26,14 @@ class WebThingsEmitter extends EventEmitter {
             this.useHttps,
             this.skipValidation,
         );
-        this.connect(webthingsClient);
-    }
-
-    async connect(webthingsClient) {
         webthingsClient.on('error', (error) => {
             this.gateway.error(`WebthingsClient Error: ${error}`);
         });
         webthingsClient.on('close', () => {
             this.webthingsClient = null;
             this.gateway.warn('WebthingsClient lost. Reconnecting in 1 second');
-            setTimeout(this.reconnect.bind(this), 1000);
+            this.emit('disconnected');
+            setTimeout(this.connect.bind(this), 1000);
         });
         webthingsClient.on(
             'propertyChanged',
@@ -84,18 +77,23 @@ class WebThingsEmitter extends EventEmitter {
                         device, device.events,
                     );
                 }
+                if (this.dead) {
+                    return;
+                }
                 this.webthingsClient = webthingsClient;
                 this.gateway.log('WebthingsClient connected');
                 for (const cmd in this.queue) {
                     this[cmd.fn](... cmd.args);
                 }
+                this.emit('connected');
             }, 100);
         } catch (e) {
             this.webthingsClient = null;
             this.gateway.warn(
                 'Failed to connect WebthingsClient. Retrying in 1 second',
             );
-            setTimeout(this.reconnect.bind(this), 1000);
+            this.emit('disconnected');
+            setTimeout(this.connect.bind(this), 1000);
         }
     }
 
@@ -234,10 +232,14 @@ class WebThingsEmitter extends EventEmitter {
     }
 
     disconnect() {
-        this.webthingsClient.removeAllListeners();
-        this.webthingsClient.disconnect();
-        this.webthingsClient = null;
+        if (this.webthingsClient) {
+            this.webthingsClient.removeAllListeners();
+            this.webthingsClient.disconnect();
+            this.webthingsClient = null;
+        }
+        this.dead = true;
         this.gateway.log('WebthingsClient disconnected');
+        this.emit('disconnected');
     }
 }
 
