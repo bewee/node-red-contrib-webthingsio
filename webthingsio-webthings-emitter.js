@@ -3,7 +3,15 @@ const {WebThingsClient} = require('webthings-client');
 
 class WebThingsEmitter extends EventEmitter {
 
-    constructor(gateway, address, port, token, useHttps, skipValidation) {
+    constructor(
+        gateway,
+        address,
+        port,
+        token,
+        useHttps,
+        skipValidation,
+        reconnectInterval,
+    ) {
         super();
         this.queue = [];
         this.gateway = gateway;
@@ -12,6 +20,7 @@ class WebThingsEmitter extends EventEmitter {
         this.token = token;
         this.useHttps = useHttps;
         this.skipValidation = skipValidation;
+        this.reconnectInterval = reconnectInterval;
         this.connect();
     }
 
@@ -31,9 +40,12 @@ class WebThingsEmitter extends EventEmitter {
         });
         webthingsClient.on('close', () => {
             this.webthingsClient = null;
-            this.gateway.warn('WebthingsClient lost. Reconnecting in 1 second');
+            this.gateway.warn(
+                // eslint-disable-next-line max-len
+                `WebthingsClient lost. Reconnecting in ${this.reconnectInterval} seconds`,
+            );
             this.emit('disconnected');
-            setTimeout(this.connect.bind(this), 1000);
+            setTimeout(this.connect.bind(this), this.reconnectInterval * 1000);
         });
         webthingsClient.on(
             'propertyChanged',
@@ -90,10 +102,11 @@ class WebThingsEmitter extends EventEmitter {
         } catch (e) {
             this.webthingsClient = null;
             this.gateway.warn(
-                'Failed to connect WebthingsClient. Retrying in 1 second',
+                // eslint-disable-next-line max-len
+                `Failed to connect WebthingsClient. Retrying in ${this.reconnectInterval} seconds`,
             );
             this.emit('disconnected');
-            setTimeout(this.connect.bind(this), 1000);
+            setTimeout(this.connect.bind(this), this.reconnectInterval * 1000);
         }
     }
 

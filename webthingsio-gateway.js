@@ -15,6 +15,7 @@ module.exports = function(RED) {
             this.accessToken,
             this.https,
             this.skipValidation,
+            RED.settings.webthingsioReconnectInterval || 5,
         );
         this.on('close', () => {
             this.webthingsEmitter.disconnect();
