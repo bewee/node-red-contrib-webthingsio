@@ -198,7 +198,8 @@ class WebThingsEmitter extends EventEmitter {
                     try {
                         inp = JSON.parse(input || '{}');
                     } catch (ex) {
-                        const e = typeof ex === 'string' ? ex : JSON.stringify(ex);
+                        const e =
+                            typeof ex === 'string' ? ex : JSON.stringify(ex);
                         throw `Failed to parse input: ${e}`;
                     }
                     break;
