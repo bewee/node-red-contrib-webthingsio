@@ -22,11 +22,19 @@ module.exports = function(RED) {
         });
         this.on('input', async (msg, send, done) => {
             if (typeof config.thing !== 'string') {
-                this.error('Thing name invalid!');
+                if (done) {
+                    done('Thing name invalid!');
+                } else {
+                    this.error('Thing name invalid!', msg);
+                }
                 return;
             }
             if (typeof config.property !== 'string') {
-                this.error('Property name invalid!');
+                if (done) {
+                    done('Property name invalid!');
+                } else {
+                    this.error('Property name invalid!', msg);
+                }
                 return;
             }
             let value;
@@ -35,8 +43,12 @@ module.exports = function(RED) {
                     config.thing, config.property,
                 );
             } catch (ex) {
-                this.error(`Failed to get property: ${ex}`);
-                done(`Failed to get property: ${ex}`);
+                const e = typeof ex === 'string' ? ex : JSON.stringify(ex);
+                if (done) {
+                    done(`Failed to get property: ${e}`);
+                } else {
+                    this.error(`Failed to get property: ${e}`, msg);
+                }
                 return;
             }
             msg.payload = value;

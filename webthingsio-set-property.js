@@ -1,3 +1,5 @@
+const {getInputValue} = require('./webthingsio-helpers');
+
 module.exports = function(RED) {
     function WebthingsioSetPropertyNode(config) {
         RED.nodes.createNode(this, config);
@@ -22,21 +24,32 @@ module.exports = function(RED) {
         });
         this.on('input', async (msg, _send, done) => {
             if (typeof config.thing !== 'string') {
-                this.error('Thing name invalid!');
+                if (done) {
+                    done('Thing name invalid!');
+                } else {
+                    this.error('Thing name invalid!', msg);
+                }
                 return;
             }
             if (typeof config.property !== 'string') {
-                this.error('Property name invalid!');
+                if (done) {
+                    done('Property name invalid!', msg);
+                } else {
+                    this.error('Property name invalid!');
+                }
                 return;
             }
             let value;
-            if (config.useInjected) {
-                value = msg.payload;
-            } else {
-                value = config.input;
-            }
-            if (typeof value !== 'string') {
-                value = JSON.stringify(value);
+            try {
+                value = getInputValue(RED, this, config, msg);
+            } catch (ex) {
+                const e = typeof ex === 'string' ? ex : JSON.stringify(ex);
+                if (done) {
+                    done(`Failed to parse input value: ${e}`);
+                } else {
+                    this.error(`Failed to parse input value: ${e}`, msg);
+                }
+                return;
             }
             try {
                 await this.gateway.webthingsEmitter.setProperty(
@@ -46,8 +59,12 @@ module.exports = function(RED) {
                 );
                 done();
             } catch (ex) {
-                this.error(`Failed to set property: ${ex}`);
-                done(`Failed to set property: ${ex}`);
+                const e = typeof ex === 'string' ? ex : JSON.stringify(ex);
+                if (done) {
+                    done(`Failed to set property: ${e}`);
+                } else {
+                    this.error(`Failed to set property: ${e}`, msg);
+                }
             }
         });
     }

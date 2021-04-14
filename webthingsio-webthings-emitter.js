@@ -122,7 +122,8 @@ class WebThingsEmitter extends EventEmitter {
         try {
             device = await this.webthingsClient.getDevice(device_id);
         } catch (ex) {
-            throw 'Cannot find thing!';
+            const e = typeof ex === 'string' ? ex : JSON.stringify(ex);
+            throw `Cannot find thing: ${e}`;
         }
         const property =
             device &&
@@ -153,7 +154,8 @@ class WebThingsEmitter extends EventEmitter {
         try {
             await property.setValue(val);
         } catch (ex) {
-            throw 'Failed to set value!';
+            const e = typeof ex === 'string' ? ex : JSON.stringify(ex);
+            throw `Failed to set value: ${e}`;
         }
     }
 
@@ -169,7 +171,8 @@ class WebThingsEmitter extends EventEmitter {
         try {
             device = await this.webthingsClient.getDevice(device_id);
         } catch (ex) {
-            throw 'Cannot find thing!';
+            const e = typeof ex === 'string' ? ex : JSON.stringify(ex);
+            throw `Cannot find thing: ${e}`;
         }
         const action = device && device.actions && device.actions[action_name];
         if (!action) {
@@ -195,7 +198,8 @@ class WebThingsEmitter extends EventEmitter {
                     try {
                         inp = JSON.parse(input || '{}');
                     } catch (ex) {
-                        throw 'Failed to parse input!';
+                        const e = typeof ex === 'string' ? ex : JSON.stringify(ex);
+                        throw `Failed to parse input: ${e}`;
                     }
                     break;
                 default:
@@ -205,13 +209,15 @@ class WebThingsEmitter extends EventEmitter {
             try {
                 await action.execute(inp);
             } catch (ex) {
-                throw 'Failed to execute!';
+                const e = typeof ex === 'string' ? ex : JSON.stringify(ex);
+                throw `Failed to execute: ${e}`;
             }
         } else {
             try {
                 await action.execute();
             } catch (ex) {
-                throw 'Failed to execute!';
+                const e = typeof ex === 'string' ? ex : JSON.stringify(ex);
+                throw `Failed to execute: ${e}`;
             }
         }
     }
@@ -228,7 +234,8 @@ class WebThingsEmitter extends EventEmitter {
         try {
             device = await this.webthingsClient.getDevice(device_id);
         } catch (ex) {
-            throw 'Cannot find thing!';
+            const e = typeof ex === 'string' ? ex : JSON.stringify(ex);
+            throw `Cannot find thing: ${e}`;
         }
         const property =
             device &&
@@ -240,7 +247,8 @@ class WebThingsEmitter extends EventEmitter {
         try {
             return await property.getValue();
         } catch (ex) {
-            throw 'Failed to get value!';
+            const e = typeof ex === 'string' ? ex : JSON.stringify(ex);
+            throw `Failed to get value: ${e}`;
         }
     }
 
