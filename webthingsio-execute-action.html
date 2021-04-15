@@ -18,8 +18,10 @@
         icon: 'webthingsio.svg',
         label: function() {
             function limitlen(s) {
-                if (s.length > 15) {
-                    s = `${s.substring(0, 15)}...`;
+                if (s.length > RED.settings.webthingsioGatewayLimitInputLen) {
+                    s = `${
+                        s.substring(0, RED.settings.webthingsioGatewayLimitInputLen)
+                    }...`;
                 }
                 return s;
             }
@@ -27,26 +29,38 @@
             if (this.name) {
                 return this.name;
             } else if (this.gateway && this.thing && this.action) {
+                let base;
+                let inputBase;
+                if (RED.settings.webthingsioGatewayShorterLabels) {
+                    base = `Execute ${this.action} of ${this.thing}`;
+                    inputBase = 'with';
+                } else {
+                    base = `Execute action ${this.action} of thing ${this.thing}`;
+                    inputBase = 'with input';
+                }
                 if (!this.input) {
-                    // eslint-disable-next-line max-len
-                    return `Execute action ${this.action} of thing ${this.thing} (no input)`;
+                    if (RED.settings.webthingsioGatewayShorterLabels) {
+                        return base;
+                    } else {
+                        return `${base} without input`;
+                    }
+                }
+                if (RED.settings.webthingsioGatewayLimitInputLen <= 0) {
+                    return base;
                 }
                 switch (this.inputMode) {
                     case 'injected':
-                        // eslint-disable-next-line max-len
-                        return `Execute action ${this.action} of thing ${this.thing}`;
+                        return base;
                     case 'fixed':
-                        // eslint-disable-next-line max-len
-                        return `Execute action ${this.action} of thing ${this.thing} (input: ${limitlen(this.input)})`;
+                        return `${base} ${inputBase} ${limitlen(this.input)}`;
                     case 'advanced':
                         if (
                             ['msg', 'flow', 'global', 'env'].includes(this.inputt)
                         ) {
                             // eslint-disable-next-line max-len
-                            return `Execute action ${this.action} of thing ${this.thing} (input: ${this.inputt}.${limitlen(this.input)})`;
+                            return `${base} ${inputBase} ${this.inputt}.${limitlen(this.input)}`;
                         } else if (['json', 'jsonata'].includes(this.inputt)) {
-                            // eslint-disable-next-line max-len
-                            return `Execute action ${this.action} of thing ${this.thing} (input: ${limitlen(this.input)})`;
+                            return `${base} ${inputBase} ${limitlen(this.input)}`;
                         }
                 }
             } else {

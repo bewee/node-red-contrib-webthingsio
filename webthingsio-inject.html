@@ -52,42 +52,54 @@
                 return this.name;
             }
             if (this.gateway && this.thing && this.injectOn) {
+                let thing, property, action, event;
+                if (RED.settings.webthingsioGatewayShorterLabels) {
+                    thing = this.thing;
+                    property = this.property;
+                    action = this.action;
+                    event = this.event;
+                } else {
+                    thing = `thing ${thing}`;
+                    property = `property ${property}`;
+                    action = `action ${action}`;
+                    event = `event ${event}`;
+                }
                 switch (this.injectOn) {
                     case 'property changed':
                         if (this.thing === '*') {
                             return 'Inject on any property change';
                         } else if (this.property === '*') {
                             // eslint-disable-next-line max-len
-                            return `Inject on change of any property of thing ${this.thing}`;
+                            return `Inject on change of any property of ${thing}`;
                         } else {
                             // eslint-disable-next-line max-len
-                            return `Inject on change of property ${this.property} of thing ${this.thing}`;
+                            return `Inject on change of ${property} of ${thing}`;
                         }
                     case 'event raised':
                         if (this.thing === '*') {
                             return 'Inject on any event';
                         } else if (this.event === '*') {
-                            return `Inject on any event of thing ${this.thing}`;
+                            return `Inject on any event of ${thing}`;
                         } else {
                             // eslint-disable-next-line max-len
-                            return `Inject on event ${this.event} of thing ${this.thing}`;
+                            return `Inject on ${event} of ${thing}`;
                         }
                     case 'action executed':
                         if (this.thing === '*') {
                             return 'Inject on any action execution';
                         } else if (this.action === '*') {
                             // eslint-disable-next-line max-len
-                            return `Inject on execution of any action of thing ${this.thing}`;
+                            return `Inject on execution of any action of ${thing}`;
                         } else {
                             // eslint-disable-next-line max-len
-                            return `Inject on execution of action ${this.action} of thing ${this.thing}`;
+                            return `Inject on execution of ${action} of ${thing}`;
                         }
                     case 'connect state changed':
                         if (this.thing === '*') {
                             return 'Inject on any changed connect state';
                         } else {
                             // eslint-disable-next-line max-len
-                            return `Inject on changed connect state of thing ${this.thing}`;
+                            return `Inject on changed connect state of ${thing}`;
                         }
                     case 'thing added':
                         return 'Inject on thing added';

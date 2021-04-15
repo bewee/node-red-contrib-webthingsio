@@ -17,7 +17,11 @@
             if (this.name) {
                 return this.name;
             } else if (this.gateway && this.thing && this.property) {
-                return `Get property ${this.property} of thing ${this.thing}`;
+                if (RED.settings.webthingsioGatewayShorterLabels) {
+                    return `Get ${this.property} of ${this.thing}`;
+                } else {
+                    return `Get property ${this.property} of thing ${this.thing}`;
+                }
             } else {
                 return 'Get WebThing property';
             }

@@ -15,14 +15,33 @@ module.exports = function(RED) {
             this.accessToken,
             this.https,
             this.skipValidation,
-            RED.settings.webthingsioReconnectInterval || 5,
+            RED.settings.webthingsioGatewayReconnectInterval || 5,
         );
         this.on('close', () => {
             this.webthingsEmitter.disconnect();
         });
     }
 
-    RED.nodes.registerType('webthingsio-gateway', WebthingsioGatewayNode);
+    RED.nodes.registerType(
+        'webthingsio-gateway',
+        WebthingsioGatewayNode,
+        {
+            settings: {
+                webthingsioGatewayReconnectInterval: {
+                    value: 5,
+                    exportable: false,
+                },
+                webthingsioGatewayShorterLabels: {
+                    value: false,
+                    exportable: true,
+                },
+                webthingsioGatewayLimitInputLen: {
+                    value: 15,
+                    exportable: true,
+                },
+            },
+        },
+    );
 
     RED.httpAdmin.get(
         '/webthingsio/js/webthingsio-client-core.js',

@@ -27,22 +27,31 @@
             if (this.name) {
                 return this.name;
             } else if (this.gateway && this.thing && this.property) {
+                let base;
+                let inputBase;
+                if (RED.settings.webthingsioGatewayShorterLabels) {
+                    base = `Set ${this.property} of ${this.thing}`;
+                    inputBase = 'to';
+                } else {
+                    base = `Set property ${this.property} of thing ${this.thing}`;
+                    inputBase = 'to value';
+                }
+                if (RED.settings.webthingsioGatewayLimitInputLen <= 0) {
+                    return base;
+                }
                 switch (this.inputMode) {
                     case 'injected':
-                        // eslint-disable-next-line max-len
-                        return `Set property ${this.property} of thing ${this.thing}`;
+                        return base;
                     case 'fixed':
-                        // eslint-disable-next-line max-len
-                        return `Set property ${this.property} of thing ${this.thing} to ${limitlen(this.input)}`;
+                        return `${base} ${inputBase} ${limitlen(this.input)}`;
                     case 'advanced':
                         if (
                             ['msg', 'flow', 'global', 'env'].includes(this.inputt)
                         ) {
                             // eslint-disable-next-line max-len
-                            return `Set property ${this.property} of thing ${this.thing} to ${this.inputt}.${limitlen(this.input)}`;
+                            return `${base} ${inputBase} ${this.inputt}.${limitlen(this.input)}`;
                         } else if (['json', 'jsonata'].includes(this.inputt)) {
-                            // eslint-disable-next-line max-len
-                            return `Set property ${this.property} of thing ${this.thing} to ${limitlen(this.input)}`;
+                            return `${base} ${inputBase} ${limitlen(this.input)}`;
                         }
                 }
             } else {
