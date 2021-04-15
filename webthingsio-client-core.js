@@ -278,8 +278,8 @@
     }
 
     function injectShow(rows) {
-        const allrows = ['injectOn', 'thing', 'property', 'event', 'action'];
-        for (const row in allrows) {
+        const allrows = ['thing', 'property', 'event', 'action'];
+        for (const row of allrows) {
             if (rows.includes(row)) {
                 $(`#${row}-row`).show();
             } else {
