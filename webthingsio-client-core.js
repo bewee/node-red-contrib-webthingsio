@@ -489,12 +489,17 @@
                 if (
                     $('#node-input--input').is(':visible')
                 ) {
-                    node.input = JSON.stringify(getFixedInputValue(
+                    const description = JSON.parse(
+                        $('#input-row').attr('input-schema'),
+                    );
+                    let value = getFixedInputValue(
                         'node-input--input',
-                        JSON.parse(
-                            $('#input-row').attr('input-schema'),
-                        ),
-                    ));
+                        description,
+                    );
+                    if (description.type === 'object') {
+                        value = JSON.stringify(value);
+                    }
+                    node.input = value;
                     delete node.inputt;
                 }
                 if (
@@ -512,13 +517,17 @@
             if (type) {
                 $('#node-input--input-advanced').typedInput('value', value);
                 $('#node-input--input-advanced').typedInput('type', type);
-            } else {
+            } else if ($('#node-input--input').length) {
+                const description = JSON.parse(
+                    $('#input-row').attr('input-schema'),
+                );
+                if (description.type === 'object') {
+                    value = JSON.parse(value);
+                }
                 setFixedInputValue(
                     'node-input--input',
-                    JSON.parse(
-                        $('#input-row').attr('input-schema'),
-                    ),
-                    JSON.parse(value),
+                    description,
+                    value,
                 );
             }
         },
