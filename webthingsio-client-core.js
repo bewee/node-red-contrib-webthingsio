@@ -112,29 +112,61 @@
             const description = getdescription(thing, a_value);
 
             if (description && description.type) {
-                buildFixedInput(description);
+                const node = buildFixedInput(description);
+                node.style.width = '70%';
+                $('div#input-row').attr(
+                    'input-schema',
+                    JSON.stringify(description),
+                );
+                if (description.type === 'object') {
+                    node.style.width = 'calc(100px + 70%)';
+                }
+                $('div#input-row').append(node);
                 $('div#inputMode-row').show();
             }
         }
         if (propagate) {
-            $('#node-input--inputMode')[0].selectedIndex = 0;
+            if (!$('#node-input--inputMode').is(':visible')) {
+                $('#node-input--inputMode')[0].selectedIndex = 0;
+            }
+            $('#node-input--input-advanced').typedInput('value', '');
+            $('#node-input--input-advanced').typedInput(
+                'type', 'msg',
+            );
             webthingsio.inputModeChanged(a);
         }
     }
 
-    function buildFixedInput(description) {
-        let newInputNode;
+    function buildFixedInput(description, id = 'node-input--input') {
+        let node;
 
-        if (Array.isArray(description.enum)) {
-            newInputNode = document.createElement('SELECT');
+        if (description.type === 'object') {
+            node = document.createElement('DIV');
+        } else if (Array.isArray(description.enum)) {
+            node = document.createElement('SELECT');
         } else {
-            newInputNode = document.createElement('INPUT');
+            node = document.createElement('INPUT');
         }
 
-        newInputNode.id = 'node-input--input';
-        newInputNode.style.width = '70%';
-        $('div#input-row').append(newInputNode);
-        $('div#input-row').attr('input-type', description.type);
+        node.id = id;
+        node.style.width = '100%';
+
+        if (description.type === 'object') {
+            node.style.borderLeft = '6px solid #ccc';
+            node.style.paddingLeft = '2px';
+            for (const input in description.properties) {
+                const labelnode = document.createElement('LABEL');
+                labelnode.setAttribute('for', `${id}/${input}`);
+                labelnode.innerText = input;
+                node.append(labelnode);
+                const childnode = buildFixedInput(
+                    description.properties[input],
+                    `${id}/${input}`,
+                );
+                node.append(childnode);
+            }
+            return node;
+        }
 
         if (Array.isArray(description.enum)) {
             const elements = description.enum.map((element) => {
@@ -143,98 +175,95 @@
                     value: element,
                 };
             });
-            initSelect(newInputNode, elements);
-        } else {
-            switch (description.type) {
-                case 'boolean':
-                    newInputNode.type = 'checkbox';
-                    break;
-                case 'number': case 'integer':
-                    newInputNode.type = 'number';
-                    if (typeof description.maximum === 'number') {
-                        newInputNode.max = description.maximum;
-                    }
-                    if (typeof description.minimum === 'number') {
-                        newInputNode.min = description.minimum;
-                    }
-                    if (description.type === 'integer') {
-                        newInputNode.step = 1;
-                        newInputNode.pattern = '\\d*';
-                    }
-                    newInputNode.value = 0;
-                    if (newInputNode.max) {
-                        newInputNode.value = newInputNode.max;
-                    }
-                    if (newInputNode.min) {
-                        newInputNode.value = newInputNode.min;
-                    }
-                    break;
-                case 'string':
-                    if (description['@type'] === 'ColorProperty') {
-                        newInputNode.type = 'color';
-                    } else {
-                        newInputNode.type = 'text';
-                    }
-                    break;
-                default:
-                    $('#node-input--input').typedInput({
-                        type: 'json',
-                        types: ['json'],
-                    });
-                    $('#node-input--input')[0].type = '';
-                    $('#node-input--input')[0]
-                        .style.position = 'absolute';
-                    $('#node-input--input')[0].style.bottom = '9999px';
-                    $('#node-input--input')[0].style.right = '9999px';
-                    $('#input-row .red-ui-typedInput-container')[0]
-                        .style.width = '70%';
-                    break;
+            initSelect(node, elements);
+            return node;
+        }
+
+        switch (description.type) {
+            case 'boolean':
+                node.type = 'checkbox';
+                break;
+            case 'number': case 'integer':
+                node.type = 'number';
+                if (typeof description.maximum === 'number') {
+                    node.max = description.maximum;
+                }
+                if (typeof description.minimum === 'number') {
+                    node.min = description.minimum;
+                }
+                if (description.type === 'integer') {
+                    node.step = 1;
+                    node.pattern = '\\d*';
+                } else {
+                    node.step = 'any';
+                }
+                node.value = 0;
+                if (node.max) {
+                    node.value = node.max;
+                }
+                if (node.min) {
+                    node.value = node.min;
+                }
+                break;
+            default:
+                if (description['@type'] === 'ColorProperty') {
+                    node.type = 'color';
+                } else {
+                    node.type = 'text';
+                }
+                break;
+        }
+
+        return node;
+    }
+
+    function getFixedInputValue(id, description) {
+        switch (description.type) {
+            case 'object': {
+                const val = {};
+                for (const input in description.properties) {
+                    val[input] = getFixedInputValue(
+                        `${id}/${input}`,
+                        description.properties[input],
+                    );
+                }
+                return val;
             }
+            case 'boolean':
+                return $(`[id='${id}']`).is(':checked');
+            default:
+                return $(`[id='${id}']`).val();
         }
     }
 
-    function getFixedInputValue() {
-        let val;
-        switch ($('#input-row').attr('input-type')) {
-            case 'boolean':
-                val = $('#node-input--input').is(':checked');
-                break;
+    function setFixedInputValue(id, description, value) {
+        switch (description.type) {
             case 'object':
-                val = $('#node-input--input').typedInput('value');
+                for (const input in description.properties) {
+                    setFixedInputValue(
+                        `${id}/${input}`,
+                        description.properties[input],
+                        value[input],
+                    );
+                }
+                break;
+            case 'boolean':
+                $(`[id='${id}']`).prop('checked', value);
                 break;
             default:
-                val = $('#node-input--input').val();
-                break;
-        }
-        return val;
-    }
-
-    function setFixedInputValue(value) {
-        switch ($('#input-row').attr('input-type')) {
-            case 'boolean':
-                $('#node-input--input').prop('checked', value);
-                break;
-            case 'object':
-                $('#node-input--input').typedInput('value', value);
-                break;
-            default:
-                $('#node-input--input').prop('value', value);
+                $(`[id='${id}']`).prop('value', value);
                 break;
         }
     }
 
     function hideFixedInput() {
         $('div#input-row').hide();
-        $('div#input-row').removeAttr('input-type');
+        $('div#input-row').removeAttr('input-schema');
         $('#node-input--input').remove();
     }
 
     function hideAdvancedInput() {
         $('div#input-advanced-row').hide();
-        $('#node-input--input-advanced').typedInput('value', '');
-        $('#node-input--input-advanced').typedInput(
-            'type', 'msg',
-        );
     }
 
     function showAdvancedInput() {
@@ -460,7 +489,12 @@
                 if (
                     $('#node-input--input').is(':visible')
                 ) {
-                    node.input = getFixedInputValue();
+                    node.input = JSON.stringify(getFixedInputValue(
+                        'node-input--input',
+                        JSON.parse(
+                            $('#input-row').attr('input-schema'),
+                        ),
+                    ));
                     delete node.inputt;
                 }
                 if (
@@ -479,7 +513,13 @@
                 $('#node-input--input-advanced').typedInput('value', value);
                 $('#node-input--input-advanced').typedInput('type', type);
             } else {
-                setFixedInputValue(value);
+                setFixedInputValue(
+                    'node-input--input',
+                    JSON.parse(
+                        $('#input-row').attr('input-schema'),
+                    ),
+                    JSON.parse(value),
+                );
             }
         },
     };
