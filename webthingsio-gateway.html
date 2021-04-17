@@ -1,7 +1,8 @@
 <script type="text/javascript">
     const script = document.createElement('script');
     script.type = 'text/javascript';
-    script.src = 'webthingsio/js/webthingsio-client-core.js';
+    // eslint-disable-next-line max-len
+    script.src = 'resources/node-red-contrib-webthingsio/webthingsio-client-core.js';
     document.head.appendChild(script);
     
     window.RED.nodes.registerType('webthingsio-gateway', {
