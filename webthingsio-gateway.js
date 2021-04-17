@@ -1,4 +1,5 @@
 const WebThingsEmitter = require('./webthingsio-webthings-emitter');
+const semver = require('semver');
 
 module.exports = function(RED) {
     function WebthingsioGatewayNode(config) {
@@ -43,18 +44,25 @@ module.exports = function(RED) {
         },
     );
 
-    RED.httpAdmin.get(
-        '/webthingsio/js/webthingsio-client-core.js',
-        function(req, res) {
-            const options = {
-                root: __dirname,
-                dotfiles: 'deny',
-            };
-            res.set(
-                'Cache-Control',
-                'public, max-age=31557600, s-maxage=31557600',
-            );
-            res.sendFile('webthingsio-client-core.js', options);
-        },
-    );
+    const redversion = RED.version();
+    const version = redversion.substr(0, redversion.indexOf('-'));
+    if (!semver.satisfies(version, '>=1.3.0')) {
+        // eslint-disable-next-line max-len
+        console.info('Node-RED version < 1.3.0: Manually adding route for webthingsio-client-core.js');
+        RED.httpAdmin.get(
+            // eslint-disable-next-line max-len
+            '/resources/node-red-contrib-webthingsio/webthingsio-client-core.js',
+            function(req, res) {
+                const options = {
+                    root: __dirname,
+                    dotfiles: 'deny',
+                };
+                res.set(
+                    'Cache-Control',
+                    'public, max-age=31557600, s-maxage=31557600',
+                );
+                res.sendFile('webthingsio-client-core.js', options);
+            },
+        );
+    }
 };
