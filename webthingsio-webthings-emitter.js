@@ -62,7 +62,21 @@ class WebThingsEmitter extends EventEmitter {
         webthingsClient.on('eventRaised', (device_id, event_name, info) => {
             this.emit('eventRaised', device_id, event_name, info);
         });
-        webthingsClient.on('connectStateChanged', (device_id, state) => {
+        webthingsClient.on('connectStateChanged', async (device_id, state) => {
+            if (state && this.webthingsClient) {
+                try {
+                    const device =
+                        await this.webthingsClient.getDevice(device_id);
+                    await webthingsClient.subscribeEvents(
+                        device, device.events,
+                    );
+                } catch (ex) {
+                    this.gateway.warn(
+                        // eslint-disable-next-line max-len
+                        `Failed to subscribe events of device ${device_id}: ${JSON.stringify(ex)}`,
+                    );
+                }
+            }
             this.emit('connectStateChanged', device_id, state);
         });
         webthingsClient.on('deviceModified', (device_id) => {
@@ -85,16 +99,23 @@ class WebThingsEmitter extends EventEmitter {
             setTimeout(async () => {
                 const devices = await webthingsClient.getDevices();
                 for (const device of devices) {
-                    await webthingsClient.subscribeEvents(
-                        device, device.events,
-                    );
+                    try {
+                        await webthingsClient.subscribeEvents(
+                            device, device.events,
+                        );
+                    } catch (ex) {
+                        this.gateway.warn(
+                            // eslint-disable-next-line max-len
+                            `Failed to subscribe events of device ${device.id}: ${JSON.stringify(ex)}`,
+                        );
+                    }
                 }
                 if (this.dead) {
                     return;
                 }
                 this.webthingsClient = webthingsClient;
                 this.gateway.log('WebthingsClient connected');
-                for (const cmd in this.queue) {
+                for (const cmd of this.queue) {
                     this[cmd.fn](... cmd.args);
                 }
                 this.emit('connected');
