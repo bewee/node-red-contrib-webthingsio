@@ -1,0 +1,19 @@
+{
+    "webthingsio-get-property" : {
+        "gatewayMissing": "Gateway fehlt!",
+        "gatewayNotFound": "Gateway nicht gefunden!",
+        "webthingsClientNotFound": "WebthingsClient nicht gefunden!",
+        "thingNameInvalid": "Gerätename ungültig!",
+        "propertyNameInvalid": "Eigenschaftsname ungültig!",
+        "getPropertyFailed": "Fehler beim Lesen der Eigenschaft: %error",
+        "shortLabel": "Lese %property von %thing",
+        "longLabel": "Lese Eigenschaft %property von Gerät %thing",
+        "defaultLabel": "Lese Eigenschaft",
+        "labelName": "Name",
+        "placeholderName": "Name",
+        "labelGateway": "Gateway",
+        "labelThing": "Gerät",
+        "labelProperty": "Eigenschaft",
+        "errorGatewayConnect": "Verbindung zum Gateway fehlgeschlagen!"
+    }
+}

@@ -1,0 +1,29 @@
+{
+    "webthingsio-gateway" : {
+        "manuallyAddingClientCore": "Node-RED version < 1.3.0: Manually adding route for webthingsio-client-core.js",
+        "webthingsClientError": "WebthingsClient Error",
+        "webthingsClientLost": "WebthingsClient lost. Reconnecting in %interval seconds",
+        "webthingsClientSubscribeFailed": "Failed to subscribe events of thing %thing: %error",
+        "webthingsClientConnected": "WebthingsClient connected",
+        "webthingsClientDisconnected": "WebthingsClient disconnected",
+        "webthingsClientConnectFailed": "Failed to connect WebthingsClient. Retrying in %interval seconds",
+        "cannotFindThing": "Cannot find thing: %error",
+        "cannotFindProperty": "Cannot find property!",
+        "cannotFindAction": "Cannot find action!",
+        "cannotFindType": "Cannot find type!",
+        "setValueFailed": "Failed to set value: %error",
+        "parseInputFailed": "Failed to parse input: %error",
+        "executeFailed": "Failed to execute: %error",
+        "getValueFailed": "Failed to get value: %error",
+        "labelName": "Name",
+        "placeholderName": "Name",
+        "labelHost": "Host",
+        "placeholderHost": "Host",
+        "labelPort": "Port",
+        "placeholderPort": "Port",
+        "labelHttps": "HTTPS?",
+        "labelAccessToken": "Access token (aka local authorization)",
+        "placeholderAccessToken": "Access token",
+        "labelSkipValidation": "Skip validation?"
+    }
+}

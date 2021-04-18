@@ -2,38 +2,53 @@ module.exports = function(RED) {
     function WebthingsioGetPropertyNode(config) {
         RED.nodes.createNode(this, config);
         if (!config.gateway) {
-            this.error('Gateway missing!');
+            this.error(RED._('webthingsio-get-property.gatewayMissing'));
             return;
         }
         this.gateway = RED.nodes.getNode(config.gateway);
         if (!this.gateway) {
-            this.error('Gateway not found!');
+            this.error(RED._('webthingsio-get-property.gatewayNotFound'));
             return;
         }
         if (!this.gateway.webthingsEmitter) {
-            this.error('WebthingsClient not found!');
+            // eslint-disable-next-line max-len
+            this.error(RED._('webthingsio-get-property.webthingsClientNotFound'));
             return;
         }
         this.gateway.webthingsEmitter.on('connected', () => {
-            this.status({fill: 'green', shape: 'dot', text: 'connected'});
+            this.status({
+                fill: 'green',
+                shape: 'dot',
+                text: 'node-red:common.status.connected',
+            });
         });
         this.gateway.webthingsEmitter.on('disconnected', () => {
-            this.status({fill: 'red', shape: 'ring', text: 'disconnected'});
+            this.status({
+                fill: 'red',
+                shape: 'ring',
+                text: 'node-red:common.status.disconnected',
+            });
         });
         this.on('input', async (msg, send, done) => {
             if (typeof config.thing !== 'string') {
                 if (done) {
-                    done('Thing name invalid!');
+                    done(RED._('webthingsio-get-property.thingNameInvalid'));
                 } else {
-                    this.error('Thing name invalid!', msg);
+                    this.error(
+                        RED._('webthingsio-get-property.thingNameInvalid'),
+                        msg,
+                    );
                 }
                 return;
             }
             if (typeof config.property !== 'string') {
                 if (done) {
-                    done('Property name invalid!');
+                    done(RED._('webthingsio-get-property.propertyNameInvalid'));
                 } else {
-                    this.error('Property name invalid!', msg);
+                    this.error(
+                        RED._('webthingsio-get-property.propertyNameInvalid'),
+                        msg,
+                    );
                 }
                 return;
             }
@@ -45,9 +60,16 @@ module.exports = function(RED) {
             } catch (ex) {
                 const e = typeof ex === 'string' ? ex : JSON.stringify(ex);
                 if (done) {
-                    done(`Failed to get property: ${e}`);
+                    done(
+                        RED._('webthingsio-get-property.getPropertyFailed')
+                            .replace('%error', e),
+                    );
                 } else {
-                    this.error(`Failed to get property: ${e}`, msg);
+                    this.error(
+                        RED._('webthingsio-get-property.getPropertyFailed')
+                            .replace('%error', e),
+                        msg,
+                    );
                 }
                 return;
             }

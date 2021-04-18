@@ -2,23 +2,31 @@ module.exports = function(RED) {
     function WebthingsioInjectNode(config) {
         RED.nodes.createNode(this, config);
         if (!config.gateway) {
-            this.error('Gateway missing!');
+            this.error(RED._('webthingsio-inject.gatewayMissing'));
             return;
         }
         this.gateway = RED.nodes.getNode(config.gateway);
         if (!this.gateway) {
-            this.error('Gateway not found!');
+            this.error(RED._('webthingsio-inject.gatewayNotFound'));
             return;
         }
         if (!this.gateway.webthingsEmitter) {
-            this.error('WebthingsClient not found!');
+            this.error(RED._('webthingsio-inject.webthingsClientNotFound'));
             return;
         }
         this.gateway.webthingsEmitter.on('connected', () => {
-            this.status({fill: 'green', shape: 'dot', text: 'connected'});
+            this.status({
+                fill: 'green',
+                shape: 'dot',
+                text: 'node-red:common.status.connected',
+            });
         });
         this.gateway.webthingsEmitter.on('disconnected', () => {
-            this.status({fill: 'red', shape: 'ring', text: 'disconnected'});
+            this.status({
+                fill: 'red',
+                shape: 'ring',
+                text: 'node-red:common.status.disconnected',
+            });
         });
         switch (config.injectOn) {
             case 'property changed':
@@ -163,7 +171,7 @@ module.exports = function(RED) {
                 });
                 break;
             default:
-                this.error('Inject on type invalid!');
+                this.error(RED._('webthingsio-inject.unknownInjectOn'));
                 break;
         }
     }

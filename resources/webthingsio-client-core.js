@@ -25,8 +25,7 @@
             return await res.json();
         } catch (ex) {
             console.error('Failed to fetch gateway!', ex);
-            $('#node-error').text('Gateway connection failed!');
-            $('#node-error').show();
+            $('#node-errorGatewayConnect').show();
         }
     }
 
@@ -73,7 +72,11 @@
             );
             const elements = getelements(thing);
             if (allowWildcard) {
-                elements.unshift({text: 'any', value: '*'});
+                elements.unshift({
+                    // eslint-disable-next-line max-len
+                    text: RED._('node-red-contrib-webthingsio/webthingsio-inject:webthingsio-inject.any'),
+                    value: '*',
+                });
             }
             initSelect($(`#node-input--${a}`)[0], elements);
             $(`div#${a}-row`).show();
@@ -310,7 +313,11 @@
                     };
                 });
                 if (allowWildcard) {
-                    elements.unshift({text: 'any', value: '*'});
+                    elements.unshift({
+                        // eslint-disable-next-line max-len
+                        text: RED._('node-red-contrib-webthingsio/webthingsio-inject:webthingsio-inject.any'),
+                        value: '*',
+                    });
                 }
                 initSelect($('#node-input--thing')[0], elements);
                 $('div#thing-row').show();

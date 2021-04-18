@@ -52,66 +52,156 @@
                 return this.name;
             }
             if (this.gateway && this.thing && this.injectOn) {
-                let thing, property, action, event;
-                if (RED.settings.webthingsioGatewayShorterLabels) {
-                    thing = this.thing;
-                    property = this.property;
-                    action = this.action;
-                    event = this.event;
-                } else {
-                    thing = `thing ${this.thing}`;
-                    property = `property ${this.property}`;
-                    action = `action ${this.action}`;
-                    event = `event ${this.event}`;
-                }
                 switch (this.injectOn) {
                     case 'property changed':
                         if (this.thing === '*') {
-                            return 'Inject on any property change';
+                            if (RED.settings.webthingsioGatewayShorterLabels) {
+                                // eslint-disable-next-line max-len
+                                return this._('webthingsio-inject.shortLabelAnyAnyPropertyChanged');
+                            } else {
+                                // eslint-disable-next-line max-len
+                                return this._('webthingsio-inject.longLabelAnyAnyPropertyChanged');
+                            }
                         } else if (this.property === '*') {
-                            // eslint-disable-next-line max-len
-                            return `Inject on change of any property of ${thing}`;
+                            if (RED.settings.webthingsioGatewayShorterLabels) {
+                                // eslint-disable-next-line max-len
+                                return this._('webthingsio-inject.shortLabelAnyPropertyChanged')
+                                    .replace('%thing', this.thing);
+                            } else {
+                                // eslint-disable-next-line max-len
+                                return this._('webthingsio-inject.longLabelAnyPropertyChanged')
+                                    .replace('%thing', this.thing);
+                            }
                         } else {
-                            // eslint-disable-next-line max-len
-                            return `Inject on change of ${property} of ${thing}`;
+                            // eslint-disable-next-line no-lonely-if
+                            if (RED.settings.webthingsioGatewayShorterLabels) {
+                                // eslint-disable-next-line max-len
+                                return this._('webthingsio-inject.shortLabelPropertyChanged')
+                                    .replace('%property', this.property)
+                                    .replace('%thing', this.thing);
+                            } else {
+                                // eslint-disable-next-line max-len
+                                return this._('webthingsio-inject.longLabelPropertyChanged')
+                                    .replace('%property', this.property)
+                                    .replace('%thing', this.thing);
+                            }
                         }
                     case 'event raised':
                         if (this.thing === '*') {
-                            return 'Inject on any event';
+                            if (RED.settings.webthingsioGatewayShorterLabels) {
+                                // eslint-disable-next-line max-len
+                                return this._('webthingsio-inject.shortLabelAnyAnyEventRaised');
+                            } else {
+                                // eslint-disable-next-line max-len
+                                return this._('webthingsio-inject.longLabelAnyAnyEventRaised');
+                            }
                         } else if (this.event === '*') {
-                            return `Inject on any event of ${thing}`;
+                            if (RED.settings.webthingsioGatewayShorterLabels) {
+                                // eslint-disable-next-line max-len
+                                return this._('webthingsio-inject.shortLabelAnyEventRaised')
+                                    .replace('%thing', this.thing);
+                            } else {
+                                // eslint-disable-next-line max-len
+                                return this._('webthingsio-inject.longLabelAnyEventRaised')
+                                    .replace('%thing', this.thing);
+                            }
                         } else {
-                            // eslint-disable-next-line max-len
-                            return `Inject on ${event} of ${thing}`;
+                            // eslint-disable-next-line no-lonely-if
+                            if (RED.settings.webthingsioGatewayShorterLabels) {
+                                // eslint-disable-next-line max-len
+                                return this._('webthingsio-inject.shortLabelEventRaised')
+                                    .replace('%event', this.event)
+                                    .replace('%thing', this.thing);
+                            } else {
+                                // eslint-disable-next-line max-len
+                                return this._('webthingsio-inject.longLabelEventRaised')
+                                    .replace('%event', this.event)
+                                    .replace('%thing', this.thing);
+                            }
                         }
                     case 'action executed':
                         if (this.thing === '*') {
-                            return 'Inject on any action execution';
+                            if (RED.settings.webthingsioGatewayShorterLabels) {
+                                // eslint-disable-next-line max-len
+                                return this._('webthingsio-inject.shortLabelAnyAnyActionExecuted');
+                            } else {
+                                // eslint-disable-next-line max-len
+                                return this._('webthingsio-inject.longLabelAnyAnyActionExecuted');
+                            }
                         } else if (this.action === '*') {
-                            // eslint-disable-next-line max-len
-                            return `Inject on execution of any action of ${thing}`;
+                            if (RED.settings.webthingsioGatewayShorterLabels) {
+                                // eslint-disable-next-line max-len
+                                return this._('webthingsio-inject.shortLabelAnyActionExecuted')
+                                    .replace('%thing', this.thing);
+                            } else {
+                                // eslint-disable-next-line max-len
+                                return this._('webthingsio-inject.longLabelAnyActionExecuted')
+                                    .replace('%thing', this.thing);
+                            }
                         } else {
-                            // eslint-disable-next-line max-len
-                            return `Inject on execution of ${action} of ${thing}`;
+                            // eslint-disable-next-line no-lonely-if
+                            if (RED.settings.webthingsioGatewayShorterLabels) {
+                                // eslint-disable-next-line max-len
+                                return this._('webthingsio-inject.shortLabelActionExecuted')
+                                    .replace('%action', this.action)
+                                    .replace('%thing', this.thing);
+                            } else {
+                                // eslint-disable-next-line max-len
+                                return this._('webthingsio-inject.longLabelActionExecuted')
+                                    .replace('%action', this.action)
+                                    .replace('%thing', this.thing);
+                            }
                         }
                     case 'connect state changed':
                         if (this.thing === '*') {
-                            return 'Inject on any changed connect state';
+                            if (RED.settings.webthingsioGatewayShorterLabels) {
+                                // eslint-disable-next-line max-len
+                                return this._('webthingsio-inject.shortLabelAnyConnectStateChanged');
+                            } else {
+                                // eslint-disable-next-line max-len
+                                return this._('webthingsio-inject.longLabelAnyConnectStateChanged');
+                            }
                         } else {
-                            // eslint-disable-next-line max-len
-                            return `Inject on changed connect state of ${thing}`;
+                            // eslint-disable-next-line no-lonely-if
+                            if (RED.settings.webthingsioGatewayShorterLabels) {
+                                // eslint-disable-next-line max-len
+                                return this._('webthingsio-inject.shortLabelConnectStateChanged')
+                                    .replace('%thing', this.thing);
+                            } else {
+                                // eslint-disable-next-line max-len
+                                return this._('webthingsio-inject.longLabelConnectStateChanged')
+                                    .replace('%thing', this.thing);
+                            }
                         }
                     case 'thing added':
-                        return 'Inject on thing added';
+                        if (RED.settings.webthingsioGatewayShorterLabels) {
+                            // eslint-disable-next-line max-len
+                            return this._('webthingsio-inject.shortLabelThingAdded');
+                        } else {
+                            // eslint-disable-next-line max-len
+                            return this._('webthingsio-inject.longLabelThingAdded');
+                        }
                     case 'thing modified':
-                        return 'Inject on thing modified';
+                        if (RED.settings.webthingsioGatewayShorterLabels) {
+                            // eslint-disable-next-line max-len
+                            return this._('webthingsio-inject.shortLabelThingModified');
+                        } else {
+                            // eslint-disable-next-line max-len
+                            return this._('webthingsio-inject.longLabelThingModified');
+                        }
                     case 'thing removed':
-                        return 'Inject on thing removed';
+                        if (RED.settings.webthingsioGatewayShorterLabels) {
+                            // eslint-disable-next-line max-len
+                            return this._('webthingsio-inject.shortLabelThingRemoved');
+                        } else {
+                            // eslint-disable-next-line max-len
+                            return this._('webthingsio-inject.longLabelThingRemoved');
+                        }
                 }
             }
-            return 'WebThing inject';
+            return this._('webthingsio-inject.defaultLabel');
         },
-        paletteLabel: 'WebThing inject',
+        paletteLabel: 'Inject',
         oneditprepare: async function() {
             async function initializeInputs(node) {
                 if (
@@ -164,46 +254,42 @@
 </script>
 
 <script type="text/html" data-template-name="webthingsio-inject">
-    <div class="form-row" id="node-error" style="display: none; color: red;">
+    <div class="form-row" id="node-errorGatewayConnect" data-i18n="webthingsio-inject.errorGatewayConnect" style="display: none; color: red;"> 
     </div>
     <div class="form-row">
-        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
-        <input type="text" id="node-input-name" placeholder="Name">
+        <label for="node-input-name" data-i18n="webthingsio-inject.labelName"><i class="fa fa-tag"></i></label>
+        <input type="text" id="node-input-name" data-i18n="[placeholder]webthingsio-inject.placeholderName">
     </div>
     <div class="form-row">
-        <label for="node-input-gateway"><i class="fa fa-tag"></i> Gateway</label>
+        <label for="node-input-gateway" data-i18n="webthingsio-inject.labelGateway"><i class="fa fa-tag"></i></label>
         <input type="text" id="node-input-gateway">
     </div>
     <div class="form-row" id="injectOn-row">
-        <label for="node-input--injectOn"><i class="fa fa-tag"></i> Inject on</label>
+        <label for="node-input--injectOn" data-i18n="webthingsio-inject.labelInjectOn"><i class="fa fa-tag"></i></label>
         <select id="node-input--injectOn" style="width: 70%;">
-            <option>property changed</option>
-            <option>event raised</option>
-            <option>action executed</option>
-            <option>connect state changed</option>
-            <option>thing added</option>
-            <option>thing modified</option>
-            <option>thing removed</option>
+            <option value="property changed" data-i18n="webthingsio-inject.optionPropertyChanged"></option>
+            <option value="event raised" data-i18n="webthingsio-inject.optionEventRaised"></option>
+            <option value="action executed" data-i18n="webthingsio-inject.optionActionExecuted"></option>
+            <option value="connect state changed" data-i18n="webthingsio-inject.optionConnectStateChanged"></option>
+            <option value="thing added" data-i18n="webthingsio-inject.optionThingAdded"></option>
+            <option value="thing modified" data-i18n="webthingsio-inject.optionThingModified"></option>
+            <option value="thing removed" data-i18n="webthingsio-inject.optionThingRemoved"></option>
         </select>
     </div>
     <div class="form-row" id="thing-row" style="display: none;">
-        <label for="node-input--thing"><i class="fa fa-tag"></i> Thing</label>
+        <label for="node-input--thing" data-i18n="webthingsio-inject.labelThing"><i class="fa fa-tag"></i></label>
         <select id="node-input--thing" style="width: 70%;"></select>
     </div>
     <div class="form-row" id="property-row" style="display: none;">
-        <label for="node-input--property"><i class="fa fa-tag"></i> Property</label>
+        <label for="node-input--property" data-i18n="webthingsio-inject.labelProperty"><i class="fa fa-tag"></i></label>
         <select id="node-input--property" style="width: 70%;"></select>
     </div>
     <div class="form-row" id="event-row" style="display: none;">
-        <label for="node-input--event"><i class="fa fa-tag"></i> Event</label>
+        <label for="node-input--event" data-i18n="webthingsio-inject.labelEvent"><i class="fa fa-tag"></i></label>
         <select id="node-input--event" style="width: 70%;"></select>
     </div>
     <div class="form-row" id="action-row" style="display: none;">
-        <label for="node-input--action"><i class="fa fa-tag"></i> Action</label>
+        <label for="node-input--action" data-i18n="webthingsio-inject.labelAction"><i class="fa fa-tag"></i></label>
         <select id="node-input--action" style="width: 70%;"></select>
     </div>
-</script>
-
-<script type="text/html" data-help-name="webthingsio-inject">
-    <p>This node injects on events, property changes, disconnects, ... of a Web Thing.</p>
 </script>

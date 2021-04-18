@@ -29,21 +29,32 @@
             if (this.name) {
                 return this.name;
             } else if (this.gateway && this.thing && this.action) {
-                let base;
-                let inputBase;
+                let base, baseWith, baseWithout;
                 if (RED.settings.webthingsioGatewayShorterLabels) {
-                    base = `Execute ${this.action} of ${this.thing}`;
-                    inputBase = 'with';
+                    base = this._('webthingsio-execute-action.shortLabel')
+                        .replace('%action', this.action)
+                        .replace('%thing', this.thing);
+                    baseWith = this._('webthingsio-execute-action.shortLabelWith')
+                        .replace('%action', this.action)
+                        .replace('%thing', this.thing);
+                    // eslint-disable-next-line max-len
+                    baseWithout = this._('webthingsio-execute-action.shortLabelWithout')
+                        .replace('%action', this.action)
+                        .replace('%thing', this.thing);
                 } else {
-                    base = `Execute action ${this.action} of thing ${this.thing}`;
-                    inputBase = 'with input';
+                    base = this._('webthingsio-execute-action.longLabel')
+                        .replace('%action', this.action)
+                        .replace('%thing', this.thing);
+                    baseWith = this._('webthingsio-execute-action.longLabelWith')
+                        .replace('%action', this.action)
+                        .replace('%thing', this.thing);
+                    // eslint-disable-next-line max-len
+                    baseWithout = this._('webthingsio-execute-action.longLabelWithout')
+                        .replace('%action', this.action)
+                        .replace('%thing', this.thing);
                 }
-                if (!this.input) {
-                    if (RED.settings.webthingsioGatewayShorterLabels) {
-                        return base;
-                    } else {
-                        return `${base} without input`;
-                    }
+                if (!this.input && this.inputMode !== 'injected') {
+                    return baseWithout;
                 }
                 if (RED.settings.webthingsioGatewayLimitInputLen <= 0) {
                     return base;
@@ -52,22 +63,26 @@
                     case 'injected':
                         return base;
                     case 'fixed':
-                        return `${base} ${inputBase} ${limitlen(this.input)}`;
+                        return baseWith
+                            .replace('%input', limitlen(this.input));
                     case 'advanced':
                         if (
                             ['msg', 'flow', 'global', 'env'].includes(this.inputt)
                         ) {
-                            // eslint-disable-next-line max-len
-                            return `${base} ${inputBase} ${this.inputt}.${limitlen(this.input)}`;
+                            return baseWith
+                                .replace(
+                                    '%input',
+                                    `${this.inputt}.${limitlen(this.input)}`,
+                                );
                         } else if (['json', 'jsonata'].includes(this.inputt)) {
-                            return `${base} ${inputBase} ${limitlen(this.input)}`;
+                            return baseWith
+                                .replace('%input', limitlen(this.input));
                         }
                 }
-            } else {
-                return 'Execute WebThing action';
             }
+            return this._('webthingsio-execute-action.defaultLabel');
         },
-        paletteLabel: 'WebThing execute action',
+        paletteLabel: 'Execute action',
         oneditprepare: async function() {
             async function initializeInputs(node) {
                 if (
@@ -124,41 +139,37 @@
 </script>
 
 <script type="text/html" data-template-name="webthingsio-execute-action">
-    <div class="form-row" id="node-error" style="display: none; color: red;">
+    <div class="form-row" id="node-errorGatewayConnect" data-i18n="webthingsio-execute-action.errorGatewayConnect" style="display: none; color: red;">
     </div>
     <div class="form-row">
-        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
-        <input type="text" id="node-input-name" placeholder="Name">
+        <label for="node-input-name" data-i18n="webthingsio-execute-action.labelName"><i class="fa fa-tag"></i></label>
+        <input type="text" id="node-input-name" data-i18n="[placeholder]webthingsio-execute-action.placeholderName">
     </div>
     <div class="form-row">
-        <label for="node-input-gateway"><i class="fa fa-tag"></i> Gateway</label>
+        <label for="node-input-gateway" data-i18n="webthingsio-execute-action.labelGateway"><i class="fa fa-tag"></i></label>
         <input type="text" id="node-input-gateway">
     </div>
     <div class="form-row" id="thing-row" style="display: none;">
-        <label for="node-input--thing"><i class="fa fa-tag"></i> Thing</label>
+        <label for="node-input--thing" data-i18n="webthingsio-execute-action.labelThing"><i class="fa fa-tag"></i></label>
         <select id="node-input--thing" style="width: 70%;"></select>
     </div>
     <div class="form-row" id="action-row" style="display: none;">
-        <label for="node-input--action"><i class="fa fa-tag"></i> Action</label>
+        <label for="node-input--action" data-i18n="webthingsio-execute-action.labelAction"><i class="fa fa-tag"></i></label>
         <select id="node-input--action" style="width: 70%;"></select>
     </div>
     <div class="form-row" id="inputMode-row" style="display: none;">
         <select id="node-input--inputMode" style="width: calc(100px + 70%);">
-            <option value="injected">Injected input</option>
-            <option value="fixed">Fixed input</option>
-            <option value="advanced">Advanced input</option>
+            <option value="injected" data-i18n="webthingsio-execute-action.optionInjectedInput"></option>
+            <option value="fixed" data-i18n="webthingsio-execute-action.optionFixedInput"></option>
+            <option value="advanced" data-i18n="webthingsio-execute-action.optionAdvancedInput"></option>
         </select>
     </div>
     <div class="form-row" id="input-row" style="display: none;">
-        <label for="node-input--input"><i class="fa fa-tag"></i> Input</label>
+        <label for="node-input--input" data-i18n="webthingsio-execute-action.labelInput"><i class="fa fa-tag"></i></label>
     </div>
     <div class="form-row" id="input-advanced-row" style="display: none;">
-        <label for="node-input--input-advanced"><i class="fa fa-tag"></i> Input</label>
+        <label for="node-input--input-advanced" data-i18n="webthingsio-execute-action.labelInput"><i class="fa fa-tag"></i></label>
         <input type="" id="node-input--input-advanced" style="position: absolute; bottom: 9999px; right: 9999px">
         <input type="hidden" id="node-input--input-advanced-type">
     </div>
-</script>
-
-<script type="text/html" data-help-name="webthingsio-execute-action">
-    <p>This node executes an action of a Web Thing.</p>
 </script>

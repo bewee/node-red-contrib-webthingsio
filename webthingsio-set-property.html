@@ -27,14 +27,21 @@
             if (this.name) {
                 return this.name;
             } else if (this.gateway && this.thing && this.property) {
-                let base;
-                let inputBase;
+                let base, baseTo;
                 if (RED.settings.webthingsioGatewayShorterLabels) {
-                    base = `Set ${this.property} of ${this.thing}`;
-                    inputBase = 'to';
+                    base = this._('webthingsio-set-property.shortLabel')
+                        .replace('%property', this.property)
+                        .replace('%thing', this.thing);
+                    baseTo = this._('webthingsio-set-property.shortLabelTo')
+                        .replace('%property', this.property)
+                        .replace('%thing', this.thing);
                 } else {
-                    base = `Set property ${this.property} of thing ${this.thing}`;
-                    inputBase = 'to value';
+                    base = this._('webthingsio-set-property.longLabel')
+                        .replace('%property', this.property)
+                        .replace('%thing', this.thing);
+                    baseTo = this._('webthingsio-set-property.longLabelTo')
+                        .replace('%property', this.property)
+                        .replace('%thing', this.thing);
                 }
                 if (RED.settings.webthingsioGatewayLimitInputLen <= 0) {
                     return base;
@@ -43,22 +50,26 @@
                     case 'injected':
                         return base;
                     case 'fixed':
-                        return `${base} ${inputBase} ${limitlen(this.input)}`;
+                        return baseTo
+                            .replace('%value', limitlen(this.input));
                     case 'advanced':
                         if (
                             ['msg', 'flow', 'global', 'env'].includes(this.inputt)
                         ) {
-                            // eslint-disable-next-line max-len
-                            return `${base} ${inputBase} ${this.inputt}.${limitlen(this.input)}`;
+                            return baseTo
+                                .replace(
+                                    '%value',
+                                    `${this.inputt}.${limitlen(this.input)}`,
+                                );
                         } else if (['json', 'jsonata'].includes(this.inputt)) {
-                            return `${base} ${inputBase} ${limitlen(this.input)}`;
+                            return baseTo
+                                .replace('%value', limitlen(this.input));
                         }
                 }
-            } else {
-                return 'Set WebThing property';
             }
+            return this._('webthingsio-set-property.defaultLabel');
         },
-        paletteLabel: 'WebThing set property',
+        paletteLabel: 'Set property',
         oneditprepare: async function() {
             async function initializeInputs(node) {
                 if (
@@ -115,41 +126,37 @@
 </script>
 
 <script type="text/html" data-template-name="webthingsio-set-property">
-    <div class="form-row" id="node-error" style="display: none; color: red;">
+    <div class="form-row" id="node-errorGatewayConnect" data-i18n="webthingsio-set-property.errorGatewayConnect" style="display: none; color: red;"> 
     </div>
     <div class="form-row">
-        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
-        <input type="text" id="node-input-name" placeholder="Name">
+        <label for="node-input-name" data-i18n="webthingsio-set-property.labelName"><i class="fa fa-tag"></i></label>
+        <input type="text" id="node-input-name" data-i18n="[placeholder]webthingsio-set-property.placeholderName">
     </div>
     <div class="form-row">
-        <label for="node-input-gateway"><i class="fa fa-tag"></i> Gateway</label>
+        <label for="node-input-gateway" data-i18n="webthingsio-set-property.labelGateway"><i class="fa fa-tag"></i></label>
         <input type="text" id="node-input-gateway">
     </div>
     <div class="form-row" id="thing-row" style="display: none;">
-        <label for="node-input--thing"><i class="fa fa-tag"></i> Thing</label>
+        <label for="node-input--thing" data-i18n="webthingsio-set-property.labelThing"><i class="fa fa-tag"></i></label>
         <select id="node-input--thing" style="width: 70%;"></select>
     </div>
     <div class="form-row" id="property-row" style="display: none;">
-        <label for="node-input--property"><i class="fa fa-tag"></i> Property</label>
+        <label for="node-input--property" data-i18n="webthingsio-set-property.labelProperty"><i class="fa fa-tag"></i></label>
         <select id="node-input--property" style="width: 70%;"></select>
     </div>
     <div class="form-row" id="inputMode-row" style="display: none;">
         <select id="node-input--inputMode" style="width: calc(100px + 70%);">
-            <option value="injected">Injected value</option>
-            <option value="fixed">Fixed value</option>
-            <option value="advanced">Advanced value</option>
+            <option value="injected" data-i18n="webthingsio-set-property.optionInjectedInput"></option>
+            <option value="fixed" data-i18n="webthingsio-set-property.optionFixedInput"></option>
+            <option value="advanced" data-i18n="webthingsio-set-property.optionAdvancedInput"></option>
         </select>
     </div>
     <div class="form-row" id="input-row" style="display: none;">
-        <label for="node-input--input"><i class="fa fa-tag"></i> Value</label>
+        <label for="node-input--input" data-i18n="webthingsio-set-property.labelInput"><i class="fa fa-tag"></i></label>
     </div>
     <div class="form-row" id="input-advanced-row" style="display: none;">
-        <label for="node-input--input-advanced"><i class="fa fa-tag"></i> Value</label>
+        <label for="node-input--input-advanced" data-i18n="webthingsio-set-property.labelInput"><i class="fa fa-tag"></i></label>
         <input type="" id="node-input--input-advanced" style="position: absolute; bottom: 9999px; right: 9999px">
         <input type="hidden" id="node-input--input-advanced-type">
     </div>
-</script>
-
-<script type="text/html" data-help-name="webthingsio-set-property">
-    <p>This node sets the value of a property of a Web Thing.</p>
 </script>

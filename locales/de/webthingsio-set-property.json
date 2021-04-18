@@ -1,0 +1,26 @@
+{
+    "webthingsio-set-property" : {
+        "gatewayMissing": "Gateway fehlt!",
+        "gatewayNotFound": "Gateway nicht gefunden!",
+        "webthingsClientNotFound": "WebthingsClient nicht gefunden!",
+        "thingNameInvalid": "Gerätename ungültig!",
+        "propertyNameInvalid": "Eigenschaftsname ungültig!",
+        "parseInputFailed": "Fehler beim Interpretieren der Eingabe: %error",
+        "setPropertyFailed": "Fehler beim Setzen der Eigenschaft: %error",
+        "shortLabel": "Setze %property von %thing",
+        "longLabel": "Setze Eigenschaft %property von Gerät %thing",
+        "shortLabelTo": "Setze %property von %thing auf %value",
+        "longLabelTo": "Setze Eigenschaft %property von Gerät %thing auf Wert %value",
+        "defaultLabel": "Setze Eigenschaft",
+        "labelName": "Name",
+        "placeholderName": "Name",
+        "labelGateway": "Gateway",
+        "labelThing": "Gerät",
+        "labelProperty": "Eigenschaft",
+        "labelInput": "Wert",
+        "optionInjectedInput": "Injizierter Wert",
+        "optionFixedInput": "Fester Wert",
+        "optionAdvancedInput": "Fortgeschrittener Wert",
+        "errorGatewayConnect": "Verbindung zum Gateway fehlgeschlagen!"
+    }
+}
