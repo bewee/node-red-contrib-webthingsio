@@ -46,7 +46,7 @@ module.exports = function(RED) {
     );
 
     const redversion = RED.version();
-    const version = redversion.substr(0, redversion.indexOf('-'));
+    const version = redversion.substr(0, redversion.indexOf('-')) || redversion;
     if (!semver.satisfies(version, '>=1.3.0')) {
         // eslint-disable-next-line max-len
         this.gateway.log(this.RED._('webthingsio-gateway.manuallyAddingClientCore'));
