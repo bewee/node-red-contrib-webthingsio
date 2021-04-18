@@ -1,0 +1,19 @@
+{
+    "webthingsio-get-property" : {
+        "gatewayMissing": "Gateway missing!",
+        "gatewayNotFound": "Gateway not found!",
+        "webthingsClientNotFound": "WebthingsClient not found!",
+        "thingNameInvalid": "Thing name invalid!",
+        "propertyNameInvalid": "Property name invalid!",
+        "getPropertyFailed": "Failed to get property: %error",
+        "shortLabel": "Get %property of %thing",
+        "longLabel": "Get property %property of thing %thing",
+        "defaultLabel": "Get property",
+        "labelName": "Name",
+        "placeholderName": "Name",
+        "labelGateway": "Gateway",
+        "labelThing": "Thing",
+        "labelProperty": "Property",
+        "errorGatewayConnect": "Gateway connection failed!"
+    }
+}

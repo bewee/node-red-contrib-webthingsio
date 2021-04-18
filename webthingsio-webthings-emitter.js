@@ -4,6 +4,7 @@ const {WebThingsClient} = require('webthings-client');
 class WebThingsEmitter extends EventEmitter {
 
     constructor(
+        RED,
         gateway,
         address,
         port,
@@ -14,6 +15,7 @@ class WebThingsEmitter extends EventEmitter {
     ) {
         super();
         this.queue = [];
+        this.RED = RED;
         this.gateway = gateway;
         this.address = address;
         this.port = port;
@@ -36,13 +38,16 @@ class WebThingsEmitter extends EventEmitter {
             this.skipValidation,
         );
         webthingsClient.on('error', (error) => {
-            this.gateway.error(`WebthingsClient Error: ${error}`);
+            this.gateway.error(`${
+                this.RED._('webthingsio-gateway.webthingsClientError')
+            }: ${error}`);
         });
         webthingsClient.on('close', () => {
             this.webthingsClient = null;
             this.gateway.warn(
                 // eslint-disable-next-line max-len
-                `WebthingsClient lost. Reconnecting in ${this.reconnectInterval} seconds`,
+                this.RED._('webthingsio-gateway.webthingsClientLost')
+                    .replace('%interval', `${this.reconnectInterval}`),
             );
             this.emit('disconnected');
             setTimeout(this.connect.bind(this), this.reconnectInterval * 1000);
@@ -73,7 +78,9 @@ class WebThingsEmitter extends EventEmitter {
                 } catch (ex) {
                     this.gateway.warn(
                         // eslint-disable-next-line max-len
-                        `Failed to subscribe events of device ${device_id}: ${JSON.stringify(ex)}`,
+                        this.RED._('webthingsio-gateway.webthingsClientSubscribeFailed')
+                            .replace('%thing', device_id)
+                            .replace('%error', JSON.stringify(ex)),
                     );
                 }
             }
@@ -106,7 +113,9 @@ class WebThingsEmitter extends EventEmitter {
                     } catch (ex) {
                         this.gateway.warn(
                             // eslint-disable-next-line max-len
-                            `Failed to subscribe events of device ${device.id}: ${JSON.stringify(ex)}`,
+                            this.RED._('webthingsio-gateway.webthingsClientSubscribeFailed')
+                                .replace('%device', device.id)
+                                .replace('%error', JSON.stringify(ex)),
                         );
                     }
                 }
@@ -114,7 +123,9 @@ class WebThingsEmitter extends EventEmitter {
                     return;
                 }
                 this.webthingsClient = webthingsClient;
-                this.gateway.log('WebthingsClient connected');
+                this.gateway.log(
+                    this.RED._('webthingsio-gateway.webthingsClientConnected'),
+                );
                 for (const cmd of this.queue) {
                     this[cmd.fn](... cmd.args);
                 }
@@ -123,8 +134,8 @@ class WebThingsEmitter extends EventEmitter {
         } catch (e) {
             this.webthingsClient = null;
             this.gateway.warn(
-                // eslint-disable-next-line max-len
-                `Failed to connect WebthingsClient. Retrying in ${this.reconnectInterval} seconds`,
+                this.RED._('webthingsio-gateway.webthingsClientConnectFailed')
+                    .replace('%interval', `${this.reconnectInterval}`),
             );
             this.emit('disconnected');
             setTimeout(this.connect.bind(this), this.reconnectInterval * 1000);
@@ -144,18 +155,19 @@ class WebThingsEmitter extends EventEmitter {
             device = await this.webthingsClient.getDevice(device_id);
         } catch (ex) {
             const e = typeof ex === 'string' ? ex : JSON.stringify(ex);
-            throw `Cannot find thing: ${e}`;
+            throw this.RED._('webthingsio-gateway.cannotFindThing')
+                .replace('%error', e);
         }
         const property =
             device &&
             device.properties &&
             device.properties[property_name];
         if (!property) {
-            throw 'Cannot find property!';
+            throw this.RED._('webthingsio-gateway.cannotFindProperty');
         }
         const type = property.description && property.description.type;
         if (!type) {
-            throw 'Cannot find type!';
+            throw this.RED._('webthingsio-gateway.cannotFindType');
         }
         let val;
         switch (type) {
@@ -176,7 +188,8 @@ class WebThingsEmitter extends EventEmitter {
             await property.setValue(val);
         } catch (ex) {
             const e = typeof ex === 'string' ? ex : JSON.stringify(ex);
-            throw `Failed to set value: ${e}`;
+            throw this.RED._('webthingsio-gateway.setValueFailed')
+                .replace('%error', e);
         }
     }
 
@@ -193,16 +206,17 @@ class WebThingsEmitter extends EventEmitter {
             device = await this.webthingsClient.getDevice(device_id);
         } catch (ex) {
             const e = typeof ex === 'string' ? ex : JSON.stringify(ex);
-            throw `Cannot find thing: ${e}`;
+            throw this.RED._('webthingsio-gateway.cannotFindThing')
+                .replace('%error', e);
         }
         const action = device && device.actions && device.actions[action_name];
         if (!action) {
-            throw 'Cannot find action!';
+            throw this.RED._('webthingsio-gateway.cannotFindAction');
         }
         const inputdescription = action.description && action.description.input;
         if (inputdescription) {
             if (!inputdescription.type) {
-                throw 'Cannot find input type!';
+                throw this.RED._('webthingsio-gateway.cannotFindType');
             }
             let inp;
             switch (inputdescription.type) {
@@ -221,7 +235,8 @@ class WebThingsEmitter extends EventEmitter {
                     } catch (ex) {
                         const e =
                             typeof ex === 'string' ? ex : JSON.stringify(ex);
-                        throw `Failed to parse input: ${e}`;
+                        throw this.RED._('webthingsio-gateway.parseInputFailed')
+                            .replace('%error', e);
                     }
                     break;
                 default:
@@ -232,14 +247,16 @@ class WebThingsEmitter extends EventEmitter {
                 await action.execute(inp);
             } catch (ex) {
                 const e = typeof ex === 'string' ? ex : JSON.stringify(ex);
-                throw `Failed to execute: ${e}`;
+                throw this.RED._('webthingsio-gateway.executeFailed')
+                    .replace('%error', e);
             }
         } else {
             try {
                 await action.execute();
             } catch (ex) {
                 const e = typeof ex === 'string' ? ex : JSON.stringify(ex);
-                throw `Failed to execute: ${e}`;
+                throw this.RED._('webthingsio-gateway.executeFailed')
+                    .replace('%error', e);
             }
         }
     }
@@ -257,20 +274,22 @@ class WebThingsEmitter extends EventEmitter {
             device = await this.webthingsClient.getDevice(device_id);
         } catch (ex) {
             const e = typeof ex === 'string' ? ex : JSON.stringify(ex);
-            throw `Cannot find thing: ${e}`;
+            throw this.RED._('webthingsio-gateway.cannotFindThing')
+                .replace('%error', e);
         }
         const property =
             device &&
             device.properties &&
             device.properties[property_name];
         if (!property) {
-            throw 'Cannot find property!';
+            throw this.RED._('webthingsio-gateway.cannotFindProperty');
         }
         try {
             return await property.getValue();
         } catch (ex) {
             const e = typeof ex === 'string' ? ex : JSON.stringify(ex);
-            throw `Failed to get value: ${e}`;
+            throw this.RED._('webthingsio-gateway.getValueFailed')
+                .replace('%error', e);
         }
     }
 
@@ -281,7 +300,9 @@ class WebThingsEmitter extends EventEmitter {
             this.webthingsClient = null;
         }
         this.dead = true;
-        this.gateway.log('WebthingsClient disconnected');
+        this.gateway.log(
+            this.RED._('webthingsio-gateway.webthingsClientDisconnected'),
+        );
         this.emit('disconnected');
     }
 }

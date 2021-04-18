@@ -1,0 +1,28 @@
+{
+    "webthingsio-execute-action" : {
+        "gatewayMissing": "Gateway fehlt!",
+        "gatewayNotFound": "Gateway nicht gefunden!",
+        "webthingsClientNotFound": "WebthingsClient nicht gefunden!",
+        "thingNameInvalid": "Gerätename ungültig!",
+        "actionNameInvalid": "Aktionsname ungültig!",
+        "parseInputFailed": "Fehler beim Interpretieren der Eingabe: %error",
+        "executeActionFailed": "Fehler beim Ausführen der Aktion: %error",
+        "shortLabel": "Führe %action von %thing aus",
+        "longLabel": "Führe Aktion %action von Gerät %thing aus",
+        "shortLabelWith": "Führe %action von %thing mit Eingabe %input aus",
+        "longLabelWith": "Führe Aktion %action von Gerät %thing mit Eingabe %input aus",
+        "shortLabelWithout": "Führe %action von %thing aus",
+        "longLabelWithout": "Führe Aktion %action von Gerät %thing ohne Eingabe aus",
+        "defaultLabel": "Aktion ausführen",
+        "labelName": "Name",
+        "placeholderName": "Name",
+        "labelGateway": "Gateway",
+        "labelThing": "Gerät",
+        "labelAction": "Aktion",
+        "labelInput": "Eingabe",
+        "optionInjectedInput": "Injizierte Eingabe",
+        "optionFixedInput": "Feste Eingabe",
+        "optionAdvancedInput": "Fortgeschrittene Eingabe",
+        "errorGatewayConnect": "Verbindung zum Gateway fehlgeschlagen!"
+    }
+}

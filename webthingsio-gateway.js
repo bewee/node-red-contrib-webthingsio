@@ -10,6 +10,7 @@ module.exports = function(RED) {
         this.accessToken = config.accessToken;
         this.skipValidation = config.skipValidation;
         this.webthingsEmitter = new WebThingsEmitter(
+            RED,
             this,
             this.host,
             this.port,
@@ -48,7 +49,7 @@ module.exports = function(RED) {
     const version = redversion.substr(0, redversion.indexOf('-'));
     if (!semver.satisfies(version, '>=1.3.0')) {
         // eslint-disable-next-line max-len
-        console.info('Node-RED version < 1.3.0: Manually adding route for webthingsio-client-core.js');
+        this.gateway.log(this.RED._('webthingsio-gateway.manuallyAddingClientCore'));
         RED.httpAdmin.get(
             // eslint-disable-next-line max-len
             '/resources/node-red-contrib-webthingsio/webthingsio-client-core.js',

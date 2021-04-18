@@ -1,0 +1,29 @@
+{
+    "webthingsio-gateway" : {
+        "manuallyAddingClientCore": "Node-RED version < 1.3.0: Füge Route für webthingsio-client-core.js manuell hinzu",
+        "webthingsClientError": "WebthingsClient Error",
+        "webthingsClientLost": "WebthingsClient verloren. Verbindungswiederherstellung in %interval Sekunden",
+        "webthingsClientSubscribeFailed": "Fehler beim abonnieren der Events des Geräts %thing: %error",
+        "webthingsClientConnected": "WebthingsClient verbunden",
+        "webthingsClientDisconnected": "WebthingsClient getrennt",
+        "webthingsClientConnectFailed": "Fehler beim Verbinden des WebthingsClient. Wiederhole in %interval Sekunden",
+        "cannotFindThing": "Kann Gerät nicht finden: %error",
+        "cannotFindProperty": "Kann Eigenschaft nicht finden!",
+        "cannotFindAction": "Kann Aktion nicht finden!",
+        "cannotFindType": "Kann Typ nicht finden!",
+        "setValueFailed": "Fehler beim setzen des Werts: %error",
+        "parseInputFailed": "Fehler beim Interpretieren der Eingabe: %error",
+        "executeFailed": "Fehler beim Ausführen: %error",
+        "getValueFailed": "Fehler beim lesen des Werts: %error",
+        "labelName": "Name",
+        "placeholderName": "Name",
+        "labelHost": "Host",
+        "placeholderHost": "Host",
+        "labelPort": "Port",
+        "placeholderPort": "Port",
+        "labelHttps": "HTTPS?",
+        "labelAccessToken": "Zugangstoken (auch: local authorization)",
+        "placeholderAccessToken": "Zugangstoken",
+        "labelSkipValidation": "Validierung überspringen?"
+    }
+}

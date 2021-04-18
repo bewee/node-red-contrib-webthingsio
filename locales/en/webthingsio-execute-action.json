@@ -1,0 +1,28 @@
+{
+    "webthingsio-execute-action" : {
+        "gatewayMissing": "Gateway missing!",
+        "gatewayNotFound": "Gateway not found!",
+        "webthingsClientNotFound": "WebthingsClient not found!",
+        "thingNameInvalid": "Thing name invalid!",
+        "actionNameInvalid": "Action name invalid!",
+        "parseInputFailed": "Failed to parse input value: %error",
+        "executeActionFailed": "Failed to execute action: %error",
+        "shortLabel": "Execute %action of %thing",
+        "longLabel": "Execute action %action of thing %thing",
+        "shortLabelWith": "Execute %action of %thing with %input",
+        "longLabelWith": "Execute action %action of thing %thing with input %input",
+        "shortLabelWithout": "Execute %action of %thing",
+        "longLabelWithout": "Execute action %action of thing %thing without input",
+        "defaultLabel": "Execute action",
+        "labelName": "Name",
+        "placeholderName": "Name",
+        "labelGateway": "Gateway",
+        "labelThing": "Thing",
+        "labelAction": "Action",
+        "labelInput": "Input",
+        "optionInjectedInput": "Injected input",
+        "optionFixedInput": "Fixed input",
+        "optionAdvancedInput": "Advanced input",
+        "errorGatewayConnect": "Gateway connection failed!"
+    }
+}

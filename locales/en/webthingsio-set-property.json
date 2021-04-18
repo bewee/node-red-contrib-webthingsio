@@ -1,0 +1,26 @@
+{
+    "webthingsio-set-property" : {
+        "gatewayMissing": "Gateway missing!",
+        "gatewayNotFound": "Gateway not found!",
+        "webthingsClientNotFound": "WebthingsClient not found!",
+        "thingNameInvalid": "Thing name invalid!",
+        "propertyNameInvalid": "Property name invalid!",
+        "parseInputFailed": "Failed to parse input value: %error",
+        "setPropertyFailed": "Failed to set property: %error",
+        "shortLabel": "Set %property of %thing",
+        "longLabel": "Set property %property of thing %thing",
+        "shortLabelTo": "Set %property of %thing to %value",
+        "longLabelTo": "Set property %property of thing %thing to value %value",
+        "defaultLabel": "Set property",
+        "labelName": "Name",
+        "placeholderName": "Name",
+        "labelGateway": "Gateway",
+        "labelThing": "Thing",
+        "labelProperty": "Property",
+        "labelInput": "Value",
+        "optionInjectedInput": "Injected value",
+        "optionFixedInput": "Fixed value",
+        "optionAdvancedInput": "Advanced value",
+        "errorGatewayConnect": "Gateway connection failed!"
+    }
+}

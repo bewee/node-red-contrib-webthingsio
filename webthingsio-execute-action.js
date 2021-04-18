@@ -4,38 +4,53 @@ module.exports = function(RED) {
     function WebthingsioExecuteActionNode(config) {
         RED.nodes.createNode(this, config);
         if (!config.gateway) {
-            this.error('Gateway missing!');
+            this.error(RED._('webthingsio-execute-action.gatewayMissing'));
             return;
         }
         this.gateway = RED.nodes.getNode(config.gateway);
         if (!this.gateway) {
-            this.error('Gateway not found!');
+            this.error(RED._('webthingsio-execute-action.gatewayNotFound'));
             return;
         }
         if (!this.gateway.webthingsEmitter) {
-            this.error('WebthingsClient not found!');
+            // eslint-disable-next-line max-len
+            this.error(RED._('webthingsio-execute-action.webthingsClientNotFound'));
             return;
         }
         this.gateway.webthingsEmitter.on('connected', () => {
-            this.status({fill: 'green', shape: 'dot', text: 'connected'});
+            this.status({
+                fill: 'green',
+                shape: 'dot',
+                text: 'node-red:common.status.connected',
+            });
         });
         this.gateway.webthingsEmitter.on('disconnected', () => {
-            this.status({fill: 'red', shape: 'ring', text: 'disconnected'});
+            this.status({
+                fill: 'red',
+                shape: 'ring',
+                text: 'node-red:common.status.disconnected',
+            });
         });
         this.on('input', async (msg, _send, done) => {
             if (typeof config.thing !== 'string') {
                 if (done) {
-                    done('Thing name invalid!');
+                    done(RED._('webthingsio-execute-action.thingNameInvalid'));
                 } else {
-                    this.error('Thing name invalid!', msg);
+                    this.error(
+                        RED._('webthingsio-execute-action.thingNameInvalid'),
+                        msg,
+                    );
                 }
                 return;
             }
             if (typeof config.action !== 'string') {
                 if (done) {
-                    done('Action name invalid!');
+                    done(RED._('webthingsio-execute-action.actionNameInvalid'));
                 } else {
-                    this.error('Action name invalid!', msg);
+                    this.error(
+                        RED._('webthingsio-execute-action.actionNameInvalid'),
+                        msg,
+                    );
                 }
                 return;
             }
@@ -45,9 +60,16 @@ module.exports = function(RED) {
             } catch (ex) {
                 const e = typeof ex === 'string' ? ex : JSON.stringify(ex);
                 if (done) {
-                    done(`Failed to parse input value: ${e}`);
+                    done(
+                        RED._('webthingsio-execute-action.parseInputFailed')
+                            .replace('%error', e),
+                    );
                 } else {
-                    this.error(`Failed to parse input value: ${e}`, msg);
+                    this.error(
+                        RED._('webthingsio-execute-action.parseInputFailed')
+                            .replace('%error', e),
+                        msg,
+                    );
                 }
                 return;
             }
@@ -61,9 +83,16 @@ module.exports = function(RED) {
             } catch (ex) {
                 const e = typeof ex === 'string' ? ex : JSON.stringify(ex);
                 if (done) {
-                    done(`Failed to execute action: ${e}`);
+                    done(
+                        RED._('webthingsio-execute-action.executeActionFailed')
+                            .replace('%error', e),
+                    );
                 } else {
-                    this.error(`Failed to execute action: ${e}`, msg);
+                    this.error(
+                        RED._('webthingsio-execute-action.executeActionFailed')
+                            .replace('%error', e),
+                        msg,
+                    );
                 }
             }
         });
