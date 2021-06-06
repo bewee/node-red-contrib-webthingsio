@@ -101,7 +101,7 @@ class WebThingsEmitter extends EventEmitter {
             this.emit('deviceRemoved', device_id);
         });
         try {
-            await webthingsClient.connect();
+            await webthingsClient.connect(this.port);
 
             setTimeout(async () => {
                 const devices = await webthingsClient.getDevices();
