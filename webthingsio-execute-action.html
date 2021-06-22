@@ -30,28 +30,29 @@
                 return this.name;
             } else if (this.gateway && this.thing && this.action) {
                 let base, baseWith, baseWithout;
+                const decodedThing = decodeURIComponent(this.thing);
                 if (RED.settings.webthingsioGatewayShorterLabels) {
                     base = this._('webthingsio-execute-action.shortLabel')
                         .replace('%action', this.action)
-                        .replace('%thing', this.thing);
+                        .replace('%thing', decodedThing);
                     baseWith = this._('webthingsio-execute-action.shortLabelWith')
                         .replace('%action', this.action)
-                        .replace('%thing', this.thing);
+                        .replace('%thing', decodedThing);
                     // eslint-disable-next-line max-len
                     baseWithout = this._('webthingsio-execute-action.shortLabelWithout')
                         .replace('%action', this.action)
-                        .replace('%thing', this.thing);
+                        .replace('%thing', decodedThing);
                 } else {
                     base = this._('webthingsio-execute-action.longLabel')
                         .replace('%action', this.action)
-                        .replace('%thing', this.thing);
+                        .replace('%thing', decodedThing);
                     baseWith = this._('webthingsio-execute-action.longLabelWith')
                         .replace('%action', this.action)
-                        .replace('%thing', this.thing);
+                        .replace('%thing', decodedThing);
                     // eslint-disable-next-line max-len
                     baseWithout = this._('webthingsio-execute-action.longLabelWithout')
                         .replace('%action', this.action)
-                        .replace('%thing', this.thing);
+                        .replace('%thing', decodedThing);
                 }
                 if (!this.input && this.inputMode !== 'injected') {
                     return baseWithout;

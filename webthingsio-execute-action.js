@@ -43,6 +43,7 @@ module.exports = function(RED) {
                 }
                 return;
             }
+            const decodedThingId = decodeURIComponent(config.thing);
             if (typeof config.action !== 'string') {
                 if (done) {
                     done(RED._('webthingsio-execute-action.actionNameInvalid'));
@@ -75,7 +76,7 @@ module.exports = function(RED) {
             }
             try {
                 await this.gateway.webthingsEmitter.executeAction(
-                    config.thing,
+                    decodedThingId,
                     config.action,
                     value,
                 );

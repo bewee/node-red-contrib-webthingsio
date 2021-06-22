@@ -43,6 +43,7 @@ module.exports = function(RED) {
                 }
                 return;
             }
+            const decodedThingId = decodeURIComponent(config.thing);
             if (typeof config.property !== 'string') {
                 if (done) {
                     done(RED._('webthingsio-set-property.propertyNameInvalid'));
@@ -75,7 +76,7 @@ module.exports = function(RED) {
             }
             try {
                 await this.gateway.webthingsEmitter.setProperty(
-                    config.thing,
+                    decodedThingId,
                     config.property,
                     value,
                 );

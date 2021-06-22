@@ -17,14 +17,15 @@
             if (this.name) {
                 return this.name;
             } else if (this.gateway && this.thing && this.property) {
+                const decodedThing = decodeURIComponent(this.thing);
                 if (RED.settings.webthingsioGatewayShorterLabels) {
                     return this._('webthingsio-get-property.shortLabel')
                         .replace('%property', this.property)
-                        .replace('%thing', this.thing);
+                        .replace('%thing', decodedThing);
                 } else {
                     return this._('webthingsio-get-property.longLabel')
                         .replace('%property', this.property)
-                        .replace('%thing', this.thing);
+                        .replace('%thing', decodedThing);
                 }
             }
             return this._('webthingsio-get-property.defaultLabel');
