@@ -52,6 +52,7 @@
                 return this.name;
             }
             if (this.gateway && this.thing && this.injectOn) {
+                const decodedThing = decodeURIComponent(this.thing);
                 switch (this.injectOn) {
                     case 'property changed':
                         if (this.thing === '*') {
@@ -66,11 +67,11 @@
                             if (RED.settings.webthingsioGatewayShorterLabels) {
                                 // eslint-disable-next-line max-len
                                 return this._('webthingsio-inject.shortLabelAnyPropertyChanged')
-                                    .replace('%thing', this.thing);
+                                    .replace('%thing', decodedThing);
                             } else {
                                 // eslint-disable-next-line max-len
                                 return this._('webthingsio-inject.longLabelAnyPropertyChanged')
-                                    .replace('%thing', this.thing);
+                                    .replace('%thing', decodedThing);
                             }
                         } else {
                             // eslint-disable-next-line no-lonely-if
@@ -78,12 +79,12 @@
                                 // eslint-disable-next-line max-len
                                 return this._('webthingsio-inject.shortLabelPropertyChanged')
                                     .replace('%property', this.property)
-                                    .replace('%thing', this.thing);
+                                    .replace('%thing', decodedThing);
                             } else {
                                 // eslint-disable-next-line max-len
                                 return this._('webthingsio-inject.longLabelPropertyChanged')
                                     .replace('%property', this.property)
-                                    .replace('%thing', this.thing);
+                                    .replace('%thing', decodedThing);
                             }
                         }
                     case 'event raised':
@@ -99,11 +100,11 @@
                             if (RED.settings.webthingsioGatewayShorterLabels) {
                                 // eslint-disable-next-line max-len
                                 return this._('webthingsio-inject.shortLabelAnyEventRaised')
-                                    .replace('%thing', this.thing);
+                                    .replace('%thing', decodedThing);
                             } else {
                                 // eslint-disable-next-line max-len
                                 return this._('webthingsio-inject.longLabelAnyEventRaised')
-                                    .replace('%thing', this.thing);
+                                    .replace('%thing', decodedThing);
                             }
                         } else {
                             // eslint-disable-next-line no-lonely-if
@@ -111,12 +112,12 @@
                                 // eslint-disable-next-line max-len
                                 return this._('webthingsio-inject.shortLabelEventRaised')
                                     .replace('%event', this.event)
-                                    .replace('%thing', this.thing);
+                                    .replace('%thing', decodedThing);
                             } else {
                                 // eslint-disable-next-line max-len
                                 return this._('webthingsio-inject.longLabelEventRaised')
                                     .replace('%event', this.event)
-                                    .replace('%thing', this.thing);
+                                    .replace('%thing', decodedThing);
                             }
                         }
                     case 'action executed':
@@ -132,11 +133,11 @@
                             if (RED.settings.webthingsioGatewayShorterLabels) {
                                 // eslint-disable-next-line max-len
                                 return this._('webthingsio-inject.shortLabelAnyActionExecuted')
-                                    .replace('%thing', this.thing);
+                                    .replace('%thing', decodedThing);
                             } else {
                                 // eslint-disable-next-line max-len
                                 return this._('webthingsio-inject.longLabelAnyActionExecuted')
-                                    .replace('%thing', this.thing);
+                                    .replace('%thing', decodedThing);
                             }
                         } else {
                             // eslint-disable-next-line no-lonely-if
@@ -144,12 +145,12 @@
                                 // eslint-disable-next-line max-len
                                 return this._('webthingsio-inject.shortLabelActionExecuted')
                                     .replace('%action', this.action)
-                                    .replace('%thing', this.thing);
+                                    .replace('%thing', decodedThing);
                             } else {
                                 // eslint-disable-next-line max-len
                                 return this._('webthingsio-inject.longLabelActionExecuted')
                                     .replace('%action', this.action)
-                                    .replace('%thing', this.thing);
+                                    .replace('%thing', decodedThing);
                             }
                         }
                     case 'connect state changed':
@@ -166,11 +167,11 @@
                             if (RED.settings.webthingsioGatewayShorterLabels) {
                                 // eslint-disable-next-line max-len
                                 return this._('webthingsio-inject.shortLabelConnectStateChanged')
-                                    .replace('%thing', this.thing);
+                                    .replace('%thing', decodedThing);
                             } else {
                                 // eslint-disable-next-line max-len
                                 return this._('webthingsio-inject.longLabelConnectStateChanged')
-                                    .replace('%thing', this.thing);
+                                    .replace('%thing', decodedThing);
                             }
                         }
                     case 'thing added':

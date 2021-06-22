@@ -41,6 +41,7 @@ module.exports = function(RED) {
                 }
                 return;
             }
+            const decodedThingId = decodeURIComponent(config.thing);
             if (typeof config.property !== 'string') {
                 if (done) {
                     done(RED._('webthingsio-get-property.propertyNameInvalid'));
@@ -55,7 +56,7 @@ module.exports = function(RED) {
             let value;
             try {
                 value = await this.gateway.webthingsEmitter.getProperty(
-                    config.thing, config.property,
+                    decodedThingId, config.property,
                 );
             } catch (ex) {
                 const e = typeof ex === 'string' ? ex : JSON.stringify(ex);

@@ -28,20 +28,21 @@ module.exports = function(RED) {
                 text: 'node-red:common.status.disconnected',
             });
         });
+        const decodedThingId = decodeURIComponent(config.thing);
         switch (config.injectOn) {
             case 'property changed':
                 this.gateway.webthingsEmitter.on(
                     'propertyChanged',
                     (thing, property, value) => {
                         let msg;
-                        if (config.thing === '*') {
+                        if (decodedThingId === '*') {
                             msg = {
                                 thing: thing,
                                 property: property,
                                 value: value,
                             };
                         } else if (
-                            config.thing === thing &&
+                            decodedThingId === thing &&
                             config.property === '*'
                         ) {
                             msg = {
@@ -49,7 +50,7 @@ module.exports = function(RED) {
                                 value: value,
                             };
                         } else if (
-                            config.thing === thing &&
+                            decodedThingId === thing &&
                             config.property === property
                         ) {
                             msg = value;
@@ -74,7 +75,7 @@ module.exports = function(RED) {
                                 data: data,
                             };
                         } else if (
-                            config.thing === thing &&
+                            decodedThingId === thing &&
                             config.event === '*'
                         ) {
                             msg = {
@@ -82,7 +83,7 @@ module.exports = function(RED) {
                                 data: data,
                             };
                         } else if (
-                            config.thing === thing &&
+                            decodedThingId === thing &&
                             config.event === event
                         ) {
                             msg = data;
@@ -107,7 +108,7 @@ module.exports = function(RED) {
                                 input: input,
                             };
                         } else if (
-                            config.thing === thing &&
+                            decodedThingId === thing &&
                             config.action === '*'
                         ) {
                             msg = {
@@ -115,7 +116,7 @@ module.exports = function(RED) {
                                 input: input,
                             };
                         } else if (
-                            config.thing === thing &&
+                            decodedThingId === thing &&
                             config.action === action
                         ) {
                             msg = input;
@@ -138,7 +139,7 @@ module.exports = function(RED) {
                                 thing: thing,
                                 state: state,
                             };
-                        } else if (config.thing === thing) {
+                        } else if (decodedThingId === thing) {
                             msg = state;
                         } else {
                             return;

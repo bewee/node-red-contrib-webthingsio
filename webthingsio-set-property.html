@@ -28,20 +28,21 @@
                 return this.name;
             } else if (this.gateway && this.thing && this.property) {
                 let base, baseTo;
+                const decodedThing = decodeURIComponent(this.thing);
                 if (RED.settings.webthingsioGatewayShorterLabels) {
                     base = this._('webthingsio-set-property.shortLabel')
                         .replace('%property', this.property)
-                        .replace('%thing', this.thing);
+                        .replace('%thing', decodedThing);
                     baseTo = this._('webthingsio-set-property.shortLabelTo')
                         .replace('%property', this.property)
-                        .replace('%thing', this.thing);
+                        .replace('%thing', decodedThing);
                 } else {
                     base = this._('webthingsio-set-property.longLabel')
                         .replace('%property', this.property)
-                        .replace('%thing', this.thing);
+                        .replace('%thing', decodedThing);
                     baseTo = this._('webthingsio-set-property.longLabelTo')
                         .replace('%property', this.property)
-                        .replace('%thing', this.thing);
+                        .replace('%thing', decodedThing);
                 }
                 if (RED.settings.webthingsioGatewayLimitInputLen <= 0) {
                     return base;
