@@ -1,6 +1,6 @@
 {
   "name": "node-red-contrib-webthingsio",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Set/get properties, execute actions and inject on events of your WebThings",
   "main": "index.js",
   "scripts": {
